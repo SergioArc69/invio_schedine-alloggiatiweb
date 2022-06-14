@@ -1,0 +1,621 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="AlloggiatiService" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="AlloggiatiService" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="AlloggiatiService">
+      <s:element name="GenerateToken">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Utente" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="WsKey" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="result" type="tns:EsitoOperazioneServizio" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="EsitoOperazioneServizio">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:EsitoOperazione">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="ErroreDettaglio" type="s:string" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="EsitoOperazione">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="esito" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="ErroreCod" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ErroreDes" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GenerateTokenResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GenerateTokenResult" type="tns:TokenInfo" />
+            <s:element minOccurs="0" maxOccurs="1" name="result" type="tns:EsitoOperazioneServizio" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="TokenInfo">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="issued" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="expires" type="s:dateTime" />
+          <s:element minOccurs="0" maxOccurs="1" name="token" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="Authentication_Test">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Utente" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="token" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="Authentication_TestResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Authentication_TestResult" type="tns:EsitoOperazioneServizio" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="Test">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Utente" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="token" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="ElencoSchedine" type="tns:ArrayOfString" />
+            <s:element minOccurs="0" maxOccurs="1" name="result" type="tns:ElencoSchedineEsito" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfString">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="string" nillable="true" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ElencoSchedineEsito">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="SchedineValide" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="Dettaglio" type="tns:ArrayOfEsitoOperazioneServizio" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfEsitoOperazioneServizio">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="EsitoOperazioneServizio" nillable="true" type="tns:EsitoOperazioneServizio" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="TestResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="TestResult" type="tns:EsitoOperazioneServizio" />
+            <s:element minOccurs="0" maxOccurs="1" name="result" type="tns:ElencoSchedineEsito" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GestioneAppartamenti_Test">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Utente" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="token" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="ElencoSchedine" type="tns:ArrayOfString" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdAppartamento" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="result" type="tns:ElencoSchedineEsito" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GestioneAppartamenti_TestResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GestioneAppartamenti_TestResult" type="tns:EsitoOperazioneServizio" />
+            <s:element minOccurs="0" maxOccurs="1" name="result" type="tns:ElencoSchedineEsito" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GestioneAppartamenti_FileUnico_Test">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Utente" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="token" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="ElencoSchedine" type="tns:ArrayOfString" />
+            <s:element minOccurs="0" maxOccurs="1" name="result" type="tns:ElencoSchedineEsito" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GestioneAppartamenti_FileUnico_TestResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GestioneAppartamenti_FileUnico_TestResult" type="tns:EsitoOperazioneServizio" />
+            <s:element minOccurs="0" maxOccurs="1" name="result" type="tns:ElencoSchedineEsito" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="Send">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Utente" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="token" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="ElencoSchedine" type="tns:ArrayOfString" />
+            <s:element minOccurs="0" maxOccurs="1" name="result" type="tns:ElencoSchedineEsito" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SendResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SendResult" type="tns:EsitoOperazioneServizio" />
+            <s:element minOccurs="0" maxOccurs="1" name="result" type="tns:ElencoSchedineEsito" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GestioneAppartamenti_Send">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Utente" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="token" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="ElencoSchedine" type="tns:ArrayOfString" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdAppartamento" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="result" type="tns:ElencoSchedineEsito" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GestioneAppartamenti_SendResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GestioneAppartamenti_SendResult" type="tns:EsitoOperazioneServizio" />
+            <s:element minOccurs="0" maxOccurs="1" name="result" type="tns:ElencoSchedineEsito" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GestioneAppartamenti_FileUnico_Send">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Utente" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="token" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="ElencoSchedine" type="tns:ArrayOfString" />
+            <s:element minOccurs="0" maxOccurs="1" name="result" type="tns:ElencoSchedineEsito" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GestioneAppartamenti_FileUnico_SendResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GestioneAppartamenti_FileUnico_SendResult" type="tns:EsitoOperazioneServizio" />
+            <s:element minOccurs="0" maxOccurs="1" name="result" type="tns:ElencoSchedineEsito" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="Tabella">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Utente" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="token" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="tipo" type="tns:TipoTabella" />
+            <s:element minOccurs="0" maxOccurs="1" name="CSV" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:simpleType name="TipoTabella">
+        <s:restriction base="s:string">
+          <s:enumeration value="Luoghi" />
+          <s:enumeration value="Tipi_Documento" />
+          <s:enumeration value="Tipi_Alloggiato" />
+          <s:enumeration value="TipoErrore" />
+          <s:enumeration value="ListaAppartamenti" />
+        </s:restriction>
+      </s:simpleType>
+      <s:element name="TabellaResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="TabellaResult" type="tns:EsitoOperazioneServizio" />
+            <s:element minOccurs="0" maxOccurs="1" name="CSV" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="Ricevuta">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Utente" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="token" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="Data" type="s:dateTime" />
+            <s:element minOccurs="0" maxOccurs="1" name="PDF" type="s:base64Binary" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="RicevutaResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="RicevutaResult" type="tns:EsitoOperazioneServizio" />
+            <s:element minOccurs="0" maxOccurs="1" name="PDF" type="s:base64Binary" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GestioneAppartamenti_AggiungiAppartamento">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Utente" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="token" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Descrizione" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="ComuneCodice" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Indirizzo" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Proprietario" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GestioneAppartamenti_AggiungiAppartamentoResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GestioneAppartamenti_AggiungiAppartamentoResult" type="tns:EsitoOperazioneServizio" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GestioneAppartamenti_DisabilitaAppartamento">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Utente" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="token" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdAppartamento" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GestioneAppartamenti_DisabilitaAppartamentoResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GestioneAppartamenti_DisabilitaAppartamentoResult" type="tns:EsitoOperazioneServizio" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="GenerateTokenSoapIn">
+    <wsdl:part name="parameters" element="tns:GenerateToken" />
+  </wsdl:message>
+  <wsdl:message name="GenerateTokenSoapOut">
+    <wsdl:part name="parameters" element="tns:GenerateTokenResponse" />
+  </wsdl:message>
+  <wsdl:message name="Authentication_TestSoapIn">
+    <wsdl:part name="parameters" element="tns:Authentication_Test" />
+  </wsdl:message>
+  <wsdl:message name="Authentication_TestSoapOut">
+    <wsdl:part name="parameters" element="tns:Authentication_TestResponse" />
+  </wsdl:message>
+  <wsdl:message name="TestSoapIn">
+    <wsdl:part name="parameters" element="tns:Test" />
+  </wsdl:message>
+  <wsdl:message name="TestSoapOut">
+    <wsdl:part name="parameters" element="tns:TestResponse" />
+  </wsdl:message>
+  <wsdl:message name="GestioneAppartamenti_TestSoapIn">
+    <wsdl:part name="parameters" element="tns:GestioneAppartamenti_Test" />
+  </wsdl:message>
+  <wsdl:message name="GestioneAppartamenti_TestSoapOut">
+    <wsdl:part name="parameters" element="tns:GestioneAppartamenti_TestResponse" />
+  </wsdl:message>
+  <wsdl:message name="GestioneAppartamenti_FileUnico_TestSoapIn">
+    <wsdl:part name="parameters" element="tns:GestioneAppartamenti_FileUnico_Test" />
+  </wsdl:message>
+  <wsdl:message name="GestioneAppartamenti_FileUnico_TestSoapOut">
+    <wsdl:part name="parameters" element="tns:GestioneAppartamenti_FileUnico_TestResponse" />
+  </wsdl:message>
+  <wsdl:message name="SendSoapIn">
+    <wsdl:part name="parameters" element="tns:Send" />
+  </wsdl:message>
+  <wsdl:message name="SendSoapOut">
+    <wsdl:part name="parameters" element="tns:SendResponse" />
+  </wsdl:message>
+  <wsdl:message name="GestioneAppartamenti_SendSoapIn">
+    <wsdl:part name="parameters" element="tns:GestioneAppartamenti_Send" />
+  </wsdl:message>
+  <wsdl:message name="GestioneAppartamenti_SendSoapOut">
+    <wsdl:part name="parameters" element="tns:GestioneAppartamenti_SendResponse" />
+  </wsdl:message>
+  <wsdl:message name="GestioneAppartamenti_FileUnico_SendSoapIn">
+    <wsdl:part name="parameters" element="tns:GestioneAppartamenti_FileUnico_Send" />
+  </wsdl:message>
+  <wsdl:message name="GestioneAppartamenti_FileUnico_SendSoapOut">
+    <wsdl:part name="parameters" element="tns:GestioneAppartamenti_FileUnico_SendResponse" />
+  </wsdl:message>
+  <wsdl:message name="TabellaSoapIn">
+    <wsdl:part name="parameters" element="tns:Tabella" />
+  </wsdl:message>
+  <wsdl:message name="TabellaSoapOut">
+    <wsdl:part name="parameters" element="tns:TabellaResponse" />
+  </wsdl:message>
+  <wsdl:message name="RicevutaSoapIn">
+    <wsdl:part name="parameters" element="tns:Ricevuta" />
+  </wsdl:message>
+  <wsdl:message name="RicevutaSoapOut">
+    <wsdl:part name="parameters" element="tns:RicevutaResponse" />
+  </wsdl:message>
+  <wsdl:message name="GestioneAppartamenti_AggiungiAppartamentoSoapIn">
+    <wsdl:part name="parameters" element="tns:GestioneAppartamenti_AggiungiAppartamento" />
+  </wsdl:message>
+  <wsdl:message name="GestioneAppartamenti_AggiungiAppartamentoSoapOut">
+    <wsdl:part name="parameters" element="tns:GestioneAppartamenti_AggiungiAppartamentoResponse" />
+  </wsdl:message>
+  <wsdl:message name="GestioneAppartamenti_DisabilitaAppartamentoSoapIn">
+    <wsdl:part name="parameters" element="tns:GestioneAppartamenti_DisabilitaAppartamento" />
+  </wsdl:message>
+  <wsdl:message name="GestioneAppartamenti_DisabilitaAppartamentoSoapOut">
+    <wsdl:part name="parameters" element="tns:GestioneAppartamenti_DisabilitaAppartamentoResponse" />
+  </wsdl:message>
+  <wsdl:portType name="ServiceSoap">
+    <wsdl:operation name="GenerateToken">
+      <wsdl:input message="tns:GenerateTokenSoapIn" />
+      <wsdl:output message="tns:GenerateTokenSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Authentication_Test">
+      <wsdl:input message="tns:Authentication_TestSoapIn" />
+      <wsdl:output message="tns:Authentication_TestSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Test">
+      <wsdl:input message="tns:TestSoapIn" />
+      <wsdl:output message="tns:TestSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GestioneAppartamenti_Test">
+      <wsdl:input message="tns:GestioneAppartamenti_TestSoapIn" />
+      <wsdl:output message="tns:GestioneAppartamenti_TestSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GestioneAppartamenti_FileUnico_Test">
+      <wsdl:input message="tns:GestioneAppartamenti_FileUnico_TestSoapIn" />
+      <wsdl:output message="tns:GestioneAppartamenti_FileUnico_TestSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Send">
+      <wsdl:input message="tns:SendSoapIn" />
+      <wsdl:output message="tns:SendSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GestioneAppartamenti_Send">
+      <wsdl:input message="tns:GestioneAppartamenti_SendSoapIn" />
+      <wsdl:output message="tns:GestioneAppartamenti_SendSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GestioneAppartamenti_FileUnico_Send">
+      <wsdl:input message="tns:GestioneAppartamenti_FileUnico_SendSoapIn" />
+      <wsdl:output message="tns:GestioneAppartamenti_FileUnico_SendSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Tabella">
+      <wsdl:input message="tns:TabellaSoapIn" />
+      <wsdl:output message="tns:TabellaSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Ricevuta">
+      <wsdl:input message="tns:RicevutaSoapIn" />
+      <wsdl:output message="tns:RicevutaSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GestioneAppartamenti_AggiungiAppartamento">
+      <wsdl:input message="tns:GestioneAppartamenti_AggiungiAppartamentoSoapIn" />
+      <wsdl:output message="tns:GestioneAppartamenti_AggiungiAppartamentoSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GestioneAppartamenti_DisabilitaAppartamento">
+      <wsdl:input message="tns:GestioneAppartamenti_DisabilitaAppartamentoSoapIn" />
+      <wsdl:output message="tns:GestioneAppartamenti_DisabilitaAppartamentoSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="ServiceSoap" type="tns:ServiceSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="GenerateToken">
+      <soap:operation soapAction="AlloggiatiService/GenerateToken" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Authentication_Test">
+      <soap:operation soapAction="AlloggiatiService/Authentication_Test" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Test">
+      <soap:operation soapAction="AlloggiatiService/Test" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GestioneAppartamenti_Test">
+      <soap:operation soapAction="AlloggiatiService/GestioneAppartamenti_Test" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GestioneAppartamenti_FileUnico_Test">
+      <soap:operation soapAction="AlloggiatiService/GestioneAppartamenti_FileUnico_Test" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Send">
+      <soap:operation soapAction="AlloggiatiService/Send" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GestioneAppartamenti_Send">
+      <soap:operation soapAction="AlloggiatiService/GestioneAppartamenti_Send" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GestioneAppartamenti_FileUnico_Send">
+      <soap:operation soapAction="AlloggiatiService/GestioneAppartamenti_FileUnico_Send" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Tabella">
+      <soap:operation soapAction="AlloggiatiService/Tabella" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Ricevuta">
+      <soap:operation soapAction="AlloggiatiService/Ricevuta" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GestioneAppartamenti_AggiungiAppartamento">
+      <soap:operation soapAction="AlloggiatiService/GestioneAppartamenti_AggiungiAppartamento" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GestioneAppartamenti_DisabilitaAppartamento">
+      <soap:operation soapAction="AlloggiatiService/GestioneAppartamenti_DisabilitaAppartamento" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="ServiceSoap12" type="tns:ServiceSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="GenerateToken">
+      <soap12:operation soapAction="AlloggiatiService/GenerateToken" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Authentication_Test">
+      <soap12:operation soapAction="AlloggiatiService/Authentication_Test" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Test">
+      <soap12:operation soapAction="AlloggiatiService/Test" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GestioneAppartamenti_Test">
+      <soap12:operation soapAction="AlloggiatiService/GestioneAppartamenti_Test" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GestioneAppartamenti_FileUnico_Test">
+      <soap12:operation soapAction="AlloggiatiService/GestioneAppartamenti_FileUnico_Test" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Send">
+      <soap12:operation soapAction="AlloggiatiService/Send" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GestioneAppartamenti_Send">
+      <soap12:operation soapAction="AlloggiatiService/GestioneAppartamenti_Send" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GestioneAppartamenti_FileUnico_Send">
+      <soap12:operation soapAction="AlloggiatiService/GestioneAppartamenti_FileUnico_Send" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Tabella">
+      <soap12:operation soapAction="AlloggiatiService/Tabella" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Ricevuta">
+      <soap12:operation soapAction="AlloggiatiService/Ricevuta" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GestioneAppartamenti_AggiungiAppartamento">
+      <soap12:operation soapAction="AlloggiatiService/GestioneAppartamenti_AggiungiAppartamento" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GestioneAppartamenti_DisabilitaAppartamento">
+      <soap12:operation soapAction="AlloggiatiService/GestioneAppartamenti_DisabilitaAppartamento" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="Service">
+    <wsdl:port name="ServiceSoap" binding="tns:ServiceSoap">
+      <soap:address location="https://alloggiatiweb.poliziadistato.it/service/service.asmx" />
+    </wsdl:port>
+    <wsdl:port name="ServiceSoap12" binding="tns:ServiceSoap12">
+      <soap12:address location="https://alloggiatiweb.poliziadistato.it/service/service.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

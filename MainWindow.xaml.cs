@@ -108,8 +108,10 @@ namespace InvioSchedineAlloggiatiWeb
                 lblIssue.Content = tiToken.issued.ToString("G");
                 lblExpiration.Content = tiToken.expires.ToString("G");
 
+                btnCheckToken.IsEnabled = true;
                 btnCheckSchedine.IsEnabled = true;
                 //btnSendSchedine.IsEnabled = true;
+                btnTabella.IsEnabled = true;
                 btnDownloadRicevuta.IsEnabled = true;
                 dpDataRicevuta.IsEnabled = true;
             }
@@ -120,8 +122,10 @@ namespace InvioSchedineAlloggiatiWeb
                 lblToken.Content = "----";
                 lblIssue.Content = lblExpiration.Content = "--/--/---- --:--:--";
 
+                btnCheckToken.IsEnabled = false;
                 btnCheckSchedine.IsEnabled = false;
                 btnSendSchedine.IsEnabled = false;
+                btnTabella.IsEnabled = false;
                 btnDownloadRicevuta.IsEnabled = false;
                 dpDataRicevuta.IsEnabled = false;
             }
@@ -159,18 +163,18 @@ namespace InvioSchedineAlloggiatiWeb
                 }
 
                 tbSchedine.Text = System.IO.File.ReadAllText(dialog.FileName);
-                tbSchedine.IsEnabled = false;
+                tbSchedine.IsReadOnly = true;
             }
         }
 
         private void cbEnableEdit_Checked(object sender, RoutedEventArgs e)
         {
-            tbSchedine.IsEnabled = true;
+            tbSchedine.IsReadOnly = false;
         }
 
         private void cbEnableEdit_Unchecked(object sender, RoutedEventArgs e)
         {
-            tbSchedine.IsEnabled = false;
+            tbSchedine.IsReadOnly = true;
         }
 
         private void btnCheckSchedine_Click(object sender, RoutedEventArgs e)
@@ -308,6 +312,34 @@ namespace InvioSchedineAlloggiatiWeb
         private void tbSchedine_TextChanged(object sender, TextChangedEventArgs e)
         {
             lblNumSchedine.Content = string.Format("Tot. schedine: {0}", tbSchedine.LineCount);
+        }
+
+        private void btnCheckToken_Click(object sender, RoutedEventArgs e)
+        {
+            EsitoOperazioneServizio eos = soapClientAW.Authentication_Test(tbUsername.Text, tiToken.token);
+            if (eos.esito)
+            {
+                sbItem.Content = "Check Token: Ok";                
+            }
+            else
+            {
+                sbItem.Content = string.Format("Check Token: Error {0}", eos.ErroreDes);
+            }
+        }
+
+        private void btnTabella_Click(object sender, RoutedEventArgs e)
+        {
+            string csv = "";
+            EsitoOperazioneServizio eos = soapClientAW.Tabella(tbUsername.Text, tiToken.token, TipoTabella.Tipi_Alloggiato, ref csv);
+            if (eos.esito)
+            {
+                tbEsitoVerifica.Text = csv;
+                sbItem.Content = String.Format("Tabella 'Luoghi': Ok (Lines={0}+Header)", tbEsitoVerifica.LineCount-1);
+            }
+            else
+            {
+                sbItem.Content = string.Format("Tabella 'Luoghi': Error {0}", eos.ErroreDes);
+            }
         }
     }
 }

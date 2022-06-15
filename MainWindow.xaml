@@ -6,22 +6,22 @@
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:local="clr-namespace:InvioSchedineAlloggiatiWeb"
         mc:Ignorable="d"
-        Title="Invio Schedine AlloggiatiWeb" Height="450" Width="790" MinWidth="790" MinHeight="450" Icon="/ServAllo.png">
+        Title="Invio Schedine AlloggiatiWeb" Height="450" Width="800" MinWidth="800" MinHeight="450" Icon="/ServAllo.png">
     <Grid Margin="0,0,0,0">
         <Grid.RowDefinitions>
             <RowDefinition Height="25"/>
             <RowDefinition Height="24"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>            
+            <RowDefinition Height="*"/>
             <RowDefinition Height="30"/>
             <RowDefinition Height="25"/>
         </Grid.RowDefinitions>
 
-        <StatusBar Grid.Row="5" HorizontalAlignment="Stretch" Height="25" VerticalAlignment="Bottom">
+        <StatusBar Grid.Row="5" Height="25" VerticalAlignment="Center" Grid.ColumnSpan="3">
             <StatusBarItem x:Name="sbItem" Content="WSToken not generated yet!" Height="25" VerticalAlignment="Stretch"/>
         </StatusBar>
 
-        <StackPanel x:Name="spCredenziali" Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Top" Margin="0">
+        <StackPanel x:Name="spCredenziali" Orientation="Horizontal" VerticalAlignment="Center" Width="auto" Grid.ColumnSpan="3">
             <CheckBox x:Name="cbAbilitaModificaCredenziali" Content="Abilita modifica" HorizontalAlignment="Left" Margin="10,0,0,0" Width="105" VerticalAlignment="Center" Click="cbAbilitaModificaCredenziali_Clicked"/>
             <Label x:Name="lblUsername" Content="Username:" HorizontalAlignment="Left" Width="67" VerticalAlignment="Center" Margin="10,0,0,0" />
             <TextBox x:Name="tbUsername" TextWrapping="NoWrap" Text="" Width="80" VerticalAlignment="Center" HorizontalAlignment="Left" IsEnabled="False" TextChanged="tbUsername_Changed"/>
@@ -30,30 +30,33 @@
             <TextBox x:Name="tbPassword" Width="80" VerticalAlignment="Center" HorizontalAlignment="Left" Text="{Binding Password, Mode=TwoWay, ElementName=pbPassword}" Visibility="Collapsed" />
             <CheckBox x:Name="cbShowPassword" Content="Show password" HorizontalAlignment="Left" VerticalAlignment="Center"  Checked="cbShowPassword_Checked" Unchecked="cbShowPassword_Unchecked" />
             <Label x:Name="lblWSKey" Content="WSKey:" HorizontalAlignment="Left" Width="50" VerticalAlignment="Center" Margin="10,0,0,0" />
-            <TextBox x:Name="tbWsKey" TextWrapping="NoWrap" Text="" Width="120" VerticalAlignment="Center" HorizontalAlignment="Left" IsEnabled="False" TextChanged="tbWsKey_Changed"/>
-            <Button x:Name="btnLogin" Content="Login" Margin="10,0,0,0" Height="20" Width="50" HorizontalAlignment="Left" VerticalAlignment="Center" Click="btnLogin_Click" />
+            <TextBox x:Name="tbWsKey" TextWrapping="NoWrap" Text="" Width="135" VerticalAlignment="Center" HorizontalAlignment="Left" IsEnabled="False" TextChanged="tbWsKey_Changed"/>
+            <Button x:Name="btnLogin" Content="Login" Margin="10,0,0,0" Height="20" Width="50" HorizontalAlignment="Right" VerticalAlignment="Center" Click="btnLogin_Click" />
         </StackPanel>
 
-        <StackPanel x:Name="spToken" Grid.Row="1" Orientation="Horizontal" VerticalAlignment="Top">
+        <StackPanel x:Name="spToken" Grid.Row="1" Orientation="Horizontal" VerticalAlignment="Center" Grid.ColumnSpan="3">
             <Label x:Name="lblTokenCaption" Content="Token:" HorizontalAlignment="Left" Width="45" VerticalAlignment="Center" Margin="10,0,0,0" FontSize="10" />
-            <Label x:Name="lblToken" Content="-----" VerticalAlignment="Center" HorizontalAlignment="Left" Width="375" FontSize="10" />
+            <Label x:Name="lblToken" Content="-----" VerticalAlignment="Center" HorizontalAlignment="Left" Width="340" FontSize="10" />
 
-            <Label x:Name="lblIssueCaption" Content="Emissione:" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" FontSize="10" />
-            <Label x:Name="lblIssue" Content="--/--/---- --:--:--" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" />
+            <Label x:Name="lblIssueCaption" Content="Emissione:" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,0,0" FontSize="10" />
+            <Label x:Name="lblIssue" Content="--/--/---- --:--:--" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Width="100" />
 
-            <Label x:Name="lblExpirationCaption" Content="Scadenza:" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" FontSize="10" />
-            <Label x:Name="lblExpiration" Content="--/--/---- --:--:--" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" />
+            <Label x:Name="lblExpirationCaption" Content="Scadenza:" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,0,0" FontSize="10" />
+            <Label x:Name="lblExpiration" Content="--/--/---- --:--:--" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10" Width="100" />
+            <Button x:Name="btnCheckToken" Content="Ck Token" Margin="8,0,0,0" Height="20" Width="60" HorizontalAlignment="Right" IsEnabled="False" VerticalAlignment="Center" Click="btnCheckToken_Click" />
         </StackPanel>
+        
         <Button x:Name="btnLoadSchedine" Content="Carica file Schedine" HorizontalAlignment="Left" Height="23" Margin="5,4,0,0" Grid.Row="2" VerticalAlignment="Top" Width="115" Click="btnLoadSchedine_Click"/>
         <CheckBox x:Name="cbEnableEdit" Content="Abilita modifica" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Row="2" Margin="0,8,10,0" Checked="cbEnableEdit_Checked" Unchecked="cbEnableEdit_Unchecked" />
-        <TextBox x:Name="tbSchedine" Margin="0,30,0,0" Grid.Row="2" TextWrapping="NoWrap" FontFamily="Lucida Console" FontSize="10" IsEnabled="False" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" TextChanged="tbSchedine_TextChanged"/>
+        <TextBox x:Name="tbSchedine" Margin="0,30,0,0" Grid.Row="2" TextWrapping="NoWrap" FontFamily="Lucida Console" FontSize="10" IsReadOnly="False" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" TextChanged="tbSchedine_TextChanged"/>
 
         <Button x:Name="btnCheckSchedine" Content="Verifica Schedine" HorizontalAlignment="Left" Height="24" Margin="5,4,0,0" Grid.Row="3" VerticalAlignment="Top" Width="115" Click="btnCheckSchedine_Click" IsEnabled="False"/>
         <Label x:Name="lblNumSchedine" Content="Tot. schedine: 0" HorizontalAlignment="Right" Grid.Row="3" Height="24" Margin="0,3,10,0" VerticalAlignment="Top" FontSize="10" />
-        <TextBox x:Name="tbEsitoVerifica" Margin="0,30,0,0" Grid.Row="3" TextWrapping="NoWrap" FontFamily="Lucida Console" FontSize="9" IsEnabled="False" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>
+        <TextBox x:Name="tbEsitoVerifica" Margin="0,30,0,0" Grid.Row="3" TextWrapping="NoWrap" FontFamily="Lucida Console" FontSize="9" IsReadOnly="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>
 
-        <Button x:Name="btnSendSchedine" Content="Invia Schedine" HorizontalAlignment="Left" Height="24" Margin="5,4,0,0" Grid.Row="4" VerticalAlignment="Top" Width="115" Click="btnSendSchedine_Click" IsEnabled="False"/>
-        <Button x:Name="btnDownloadRicevuta" Content="Download Ricevuta" HorizontalAlignment="Right" Height="23" Margin="0,4,115,0" Grid.Row="4" VerticalAlignment="Top" Width="115" Click="btnDownloadRicevuta_Click" IsEnabled="False"/>
-        <DatePicker x:Name="dpDataRicevuta" SelectedDate="{x:Static sys:DateTime.Now}" HorizontalAlignment="Right" Margin="0,4,10,0" Grid.Row="4" VerticalAlignment="Top" IsEnabled="False" Width="100"/>
+        <Button x:Name="btnSendSchedine" Content="Invia Schedine" HorizontalAlignment="Left" Height="24" Margin="5,0,0,0" Grid.Row="4" VerticalAlignment="Center" Width="115" Click="btnSendSchedine_Click" IsEnabled="False"/>
+        <Button x:Name="btnTabella" Content="Download tabella" HorizontalAlignment="Center" Height="23" Margin="0,0,120,0" Grid.Row="4" VerticalAlignment="Center" Width="115" Click="btnTabella_Click" IsEnabled="False" Visibility="Hidden"/>
+        <Button x:Name="btnDownloadRicevuta" Content="Download Ricevuta" HorizontalAlignment="Right" Height="23" Margin="0,0,120,0" Grid.Row="4" VerticalAlignment="Center" Width="115" Click="btnDownloadRicevuta_Click" IsEnabled="False"/>
+        <DatePicker x:Name="dpDataRicevuta" SelectedDate="{x:Static sys:DateTime.Now}" HorizontalAlignment="Right" Margin="0,0,10,0" Grid.Row="4" VerticalAlignment="Center" IsEnabled="False" Width="100" />
     </Grid>
 </Window>

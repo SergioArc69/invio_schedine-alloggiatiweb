@@ -29,7 +29,9 @@ namespace InvioSchedineAlloggiatiWeb
         TokenInfo tiToken = null;
 
         ObservableCollection<RecordSchedina> schedine = null;
-        DataTable dtLuoghi = null;
+        DataTable dtLuoghi = null,
+                  dtTipiAlloggiato = null,
+                  dtTipiDocumento = null;
 
         public MainWindow()
         {
@@ -46,6 +48,42 @@ namespace InvioSchedineAlloggiatiWeb
             soapClientAW = new AlloggiatiWeb.ServiceSoapClient();
 
             schedine = new ObservableCollection<RecordSchedina>();
+
+            if (Directory.Exists("./Dati"))
+            {
+                string csv = "";
+                if (File.Exists("./Dati/Luoghi.csv"))
+                {
+                    csv = File.ReadAllText("./Dati/Luoghi.csv");
+                    dtLuoghi = ConvertCSVtoDataTable(csv);
+                }
+
+                if (File.Exists("./Dati/TipiAlloggiato.csv"))
+                {
+                    csv = File.ReadAllText("./Dati/TipiAlloggiato.csv");
+                    dtTipiAlloggiato = ConvertCSVtoDataTable(csv);
+                }
+
+                if (File.Exists("./Dati/TipiDocumento.csv"))
+                {
+                    csv = File.ReadAllText("./Dati/TipiDocumento.csv");
+                    dtTipiDocumento = ConvertCSVtoDataTable(csv);
+                }
+
+                if (File.GetLastWriteTime("./Dati/TipiDocumento.csv") < DateTime.Today.AddDays(-1))
+                {
+                    btnTabelle.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    btnTabelle.Visibility = Visibility.Hidden;
+                }
+            }
+            else
+            {
+                Directory.CreateDirectory("./Dati");
+                btnTabelle.Visibility = Visibility.Visible;
+            }
         }
 
         private void cbAbilitaModificaCredenziali_Clicked(object sender, RoutedEventArgs e)
@@ -118,7 +156,7 @@ namespace InvioSchedineAlloggiatiWeb
                 btnCheckToken.IsEnabled = true;
                 btnCheckSchedine.IsEnabled = true;
                 //btnSendSchedine.IsEnabled = true;
-                btnTabella.IsEnabled = true;
+                btnTabelle.IsEnabled = true;
                 btnDownloadRicevuta.IsEnabled = true;
                 dpDataRicevuta.IsEnabled = true;
             }
@@ -132,7 +170,7 @@ namespace InvioSchedineAlloggiatiWeb
                 btnCheckToken.IsEnabled = false;
                 btnCheckSchedine.IsEnabled = false;
                 btnSendSchedine.IsEnabled = false;
-                btnTabella.IsEnabled = false;
+                btnTabelle.IsEnabled = false;
                 btnDownloadRicevuta.IsEnabled = false;
                 dpDataRicevuta.IsEnabled = false;
             }
@@ -377,12 +415,13 @@ namespace InvioSchedineAlloggiatiWeb
             return dt;
         }
 
-        private void btnTabella_Click(object sender, RoutedEventArgs e)
+        private void btnTabelle_Click(object sender, RoutedEventArgs e)
         {
             string csv = "";
             EsitoOperazioneServizio eos = soapClientAW.Tabella(tbUsername.Text, tiToken.token, TipoTabella.Luoghi, ref csv);
             if (eos.esito)
             {
+                File.WriteAllText("./Dati/Luoghi.csv", csv);
                 tbEsitoVerifica.Text = csv;
 
                 dtLuoghi = ConvertCSVtoDataTable(csv);
@@ -391,6 +430,36 @@ namespace InvioSchedineAlloggiatiWeb
             else
             {
                 sbItem.Content = string.Format("Tabella 'Luoghi': Error {0}", eos.ErroreDes);
+            }
+
+            csv = "";
+            eos = soapClientAW.Tabella(tbUsername.Text, tiToken.token, TipoTabella.Tipi_Alloggiato, ref csv);
+            if (eos.esito)
+            {
+                File.WriteAllText("./Dati/TipiAlloggiato.csv", csv);
+                tbEsitoVerifica.Text = csv;
+
+                dtTipiAlloggiato = ConvertCSVtoDataTable(csv);
+                sbItem.Content = String.Format("Tabella 'Tipi_Alloggiato': Ok (Lines={0}+Header)", tbEsitoVerifica.LineCount - 1);
+            }
+            else
+            {
+                sbItem.Content = string.Format("Tabella 'Tipi_Alloggiato': Error {0}", eos.ErroreDes);
+            }
+
+            csv = "";
+            eos = soapClientAW.Tabella(tbUsername.Text, tiToken.token, TipoTabella.Tipi_Documento, ref csv);
+            if (eos.esito)
+            {
+                File.WriteAllText("./Dati/TipiDocumento.csv", csv);
+                tbEsitoVerifica.Text = csv;
+
+                dtTipiDocumento = ConvertCSVtoDataTable(csv);
+                sbItem.Content = String.Format("Tabella 'Tipi_Documento': Ok (Lines={0}+Header)", tbEsitoVerifica.LineCount - 1);
+            }
+            else
+            {
+                sbItem.Content = string.Format("Tabella 'Tipi_Documento': Error {0}", eos.ErroreDes);
             }
         }
     }

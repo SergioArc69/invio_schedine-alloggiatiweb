@@ -50,7 +50,7 @@
         <CheckBox x:Name="cbEnableEdit" Content="Abilita modifica" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Row="2" Margin="0,8,10,0" Checked="cbEnableEdit_Checked" Unchecked="cbEnableEdit_Unchecked" />
         <DataGrid x:Name="dgSchedine" Margin="0,30,0,0" Grid.Row="2" FontFamily="Lucida Console" FontSize="10" IsReadOnly="False" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" AutoGenerateColumns="False" ItemsSource="{Binding}" >
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Tipo Alloggiato" Binding="{Binding TipoAlloggiato}"/>
+                <DataGridTextColumn Header="Tipo Alloggiato" Binding="{Binding TipoAlloggiato}" />
                 <DataGridTextColumn Header="Data Arrivo" Binding="{Binding DataArrivo}"/>
                 <DataGridTextColumn Header="Giorni presenza" Binding="{Binding GiorniPermanenza}" />
                 <DataGridTextColumn Header="Cognome" Binding="{Binding Cognome}"/>

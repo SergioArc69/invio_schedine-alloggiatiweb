@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Data;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,6 +28,9 @@ namespace InvioSchedineAlloggiatiWeb
         ServiceSoapClient soapClientAW = null;
         TokenInfo tiToken = null;
 
+        ObservableCollection<RecordSchedina> schedine = null;
+        DataTable dtLuoghi = null;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -34,11 +40,12 @@ namespace InvioSchedineAlloggiatiWeb
             pbPassword.Password = settingsDef.Password;
             tbWsKey.Text = settingsDef.WSKey;
 
-            dpDataRicevuta.SelectedDate = DateTime.Today;
-            dpDataRicevuta.DisplayDateEnd = DateTime.Today;
-            dpDataRicevuta.DisplayDateStart = DateTime.Today.AddMonths(-1);
+            dpDataRicevuta.SelectedDate = dpDataRicevuta.DisplayDateEnd = DateTime.Today.AddDays(-1);
+            dpDataRicevuta.DisplayDateStart = dpDataRicevuta.SelectedDate.Value.AddMonths(-1);
 
             soapClientAW = new AlloggiatiWeb.ServiceSoapClient();
+
+            schedine = new ObservableCollection<RecordSchedina>();
         }
 
         private void cbAbilitaModificaCredenziali_Clicked(object sender, RoutedEventArgs e)
@@ -162,19 +169,30 @@ namespace InvioSchedineAlloggiatiWeb
                     settingsDef.Save();
                 }
 
-                tbSchedine.Text = System.IO.File.ReadAllText(dialog.FileName);
-                tbSchedine.IsReadOnly = true;
+                schedine.Clear();
+
+                //tbSchedine.Text = System.IO.File.ReadAllText(dialog.FileName);
+                string[] sLines = System.IO.File.ReadAllLines(dialog.FileName);
+                foreach (string line in sLines)
+                {
+                    RecordSchedina rs = new RecordSchedina(line);
+                    schedine.Add(rs);
+                }
+
+                dgSchedine.ItemsSource = schedine;
+
+                dgSchedine.IsReadOnly = true;
             }
         }
 
         private void cbEnableEdit_Checked(object sender, RoutedEventArgs e)
         {
-            tbSchedine.IsReadOnly = false;
+            dgSchedine.IsReadOnly = false;
         }
 
         private void cbEnableEdit_Unchecked(object sender, RoutedEventArgs e)
         {
-            tbSchedine.IsReadOnly = true;
+            dgSchedine.IsReadOnly = true;
         }
 
         private void btnCheckSchedine_Click(object sender, RoutedEventArgs e)
@@ -182,11 +200,11 @@ namespace InvioSchedineAlloggiatiWeb
             ElencoSchedineEsito ese = new ElencoSchedineEsito();
             ArrayOfString ES = new ArrayOfString();
 
-            int lineCount = tbSchedine.LineCount;
+            int lineCount = dgSchedine.Items.Count;
 
             for (int i = 0; i < lineCount; i++)
             {
-                string s = tbSchedine.GetLineText(i).TrimEnd(new char[] { '\r', '\n' });
+                string s = ""; // dgSchedine.dGetLineText(i).TrimEnd(new char[] { '\r', '\n' });
                 ES.Add(s);
             }
             EsitoOperazioneServizio res = soapClientAW.Test(tbUsername.Text, tiToken.token, ES, ref ese);
@@ -219,7 +237,7 @@ namespace InvioSchedineAlloggiatiWeb
         {
             ElencoSchedineEsito ese = new ElencoSchedineEsito();
             ArrayOfString ES = new ArrayOfString();
-
+            /*
             int lineCount = tbSchedine.LineCount;
 
             for (int i = 0; i < lineCount; i++)
@@ -227,12 +245,14 @@ namespace InvioSchedineAlloggiatiWeb
                 string s = tbSchedine.GetLineText(i).TrimEnd(new char[] { '\r', '\n' });
                 ES.Add(s);
             }
+            */
             EsitoOperazioneServizio res = soapClientAW.Send(tbUsername.Text, tiToken.token, ES, ref ese);
             if (res.esito)
             {
                 sbItem.Content = "Send: Eseguito";
 
-                StringBuilder testo = new StringBuilder(lineCount + 2);
+                //StringBuilder testo = new StringBuilder(lineCount + 2);
+                StringBuilder testo = new StringBuilder( 2);
 
                 testo.AppendLine(string.Format("Schedine acquisite: {0}\r\n", ese.SchedineValide));
 
@@ -311,7 +331,7 @@ namespace InvioSchedineAlloggiatiWeb
 
         private void tbSchedine_TextChanged(object sender, TextChangedEventArgs e)
         {
-            lblNumSchedine.Content = string.Format("Tot. schedine: {0}", tbSchedine.LineCount);
+            lblNumSchedine.Content = string.Format("Tot. schedine: {0}", "xxx"); //dgSchedine.LineCount
         }
 
         private void btnCheckToken_Click(object sender, RoutedEventArgs e)
@@ -327,13 +347,45 @@ namespace InvioSchedineAlloggiatiWeb
             }
         }
 
+        public DataTable ConvertCSVtoDataTable(string csv)
+        {
+            DataTable dt = new DataTable();
+
+            string[] csvLines = csv.Split('\n');
+
+            string[] headers = csvLines[0].Split(';');
+            foreach (string header in headers)
+            {
+                dt.Columns.Add(header);
+            }
+
+            for  (int r = 1; r < csvLines.Count(); r++ )
+            {
+                string row = csvLines[r];
+                if (!string.IsNullOrEmpty(row))
+                {
+                    string[] cells = row.Split(';');
+                    DataRow dr = dt.NewRow();
+                    for (int i = 0; i < headers.Length; i++)
+                    {
+                        dr[i] = cells[i];
+                    }
+                    dt.Rows.Add(dr);
+                }
+            }
+
+            return dt;
+        }
+
         private void btnTabella_Click(object sender, RoutedEventArgs e)
         {
             string csv = "";
-            EsitoOperazioneServizio eos = soapClientAW.Tabella(tbUsername.Text, tiToken.token, TipoTabella.Tipi_Alloggiato, ref csv);
+            EsitoOperazioneServizio eos = soapClientAW.Tabella(tbUsername.Text, tiToken.token, TipoTabella.Luoghi, ref csv);
             if (eos.esito)
             {
                 tbEsitoVerifica.Text = csv;
+
+                dtLuoghi = ConvertCSVtoDataTable(csv);
                 sbItem.Content = String.Format("Tabella 'Luoghi': Ok (Lines={0}+Header)", tbEsitoVerifica.LineCount-1);
             }
             else

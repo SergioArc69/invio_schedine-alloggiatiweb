@@ -17,6 +17,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using InvioSchedineAlloggiatiWeb.AlloggiatiWeb;
 using InvioSchedineAlloggiatiWeb.Misc;
+using InvioSchedineAlloggiatiWeb.Models;
 
 namespace InvioSchedineAlloggiatiWeb
 {
@@ -60,7 +61,7 @@ namespace InvioSchedineAlloggiatiWeb
                     if (File.Exists("./Dati/TipiAlloggiato.csv"))
                     {
                         csv = File.ReadAllText("./Dati/TipiAlloggiato.csv");
-                        dtTipiAlloggiato = Utils.ConvertCSVtoDataTable(csv);
+                        dtTipiAlloggiato = Utils.LoadCSVintoDataTable(csv);
 
                         sEsito.AppendFormat("  Tabella 'Tipi_Alloggiato': {0} ({1} Righe)\n", dtTipiAlloggiato.Rows.Count > 0 ? "Ok" : "KO", dtTipiAlloggiato.Rows.Count);
 
@@ -75,7 +76,7 @@ namespace InvioSchedineAlloggiatiWeb
                     if (File.Exists("./Dati/TipiDocumento.csv"))
                     {
                         csv = File.ReadAllText("./Dati/TipiDocumento.csv");
-                        dtTipiDocumento = Utils.ConvertCSVtoDataTable(csv);
+                        dtTipiDocumento = Utils.LoadCSVintoDataTable(csv);
 
                         sEsito.AppendFormat("  Tabella 'Tipi_Documento':  {0} ({1} Righe)\n", dtTipiDocumento.Rows.Count > 0 ? "Ok" : "KO", dtTipiDocumento.Rows.Count);
 
@@ -91,7 +92,7 @@ namespace InvioSchedineAlloggiatiWeb
                     if (File.Exists("./Dati/Luoghi.csv"))
                     {
                         csv = File.ReadAllText("./Dati/Luoghi.csv");
-                        dtLuoghi = Utils.ConvertCSVtoDataTable(csv);
+                        dtLuoghi = Utils.LoadCSVintoDataTable(csv);
 
                         sEsito.AppendFormat("  Tabella 'Luoghi':          {0} ({1} Righe)\n", dtLuoghi.Rows.Count > 0 ? "Ok" : "KO", dtLuoghi.Rows.Count);
 
@@ -413,6 +414,12 @@ namespace InvioSchedineAlloggiatiWeb
             lblNumSchedine.Content = string.Format("Tot. schedine: {0}", "xxx"); //dgSchedine.LineCount
         }
 
+        private void dgSchedine_Row_DoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            DataGridRow row = sender as DataGridRow;
+            RecordSchedina rs = (RecordSchedina)row.Item;
+        }
+
         private void btnCheckToken_Click(object sender, RoutedEventArgs e)
         {
             EsitoOperazioneServizio eos = soapClientAW.Authentication_Test(tbUsername.Text, tiToken.token);
@@ -438,7 +445,7 @@ namespace InvioSchedineAlloggiatiWeb
                 File.WriteAllText("./Dati/TipiAlloggiato.csv", csv);
                 //tbEsitoVerifica.Text = csv;
 
-                dtTipiAlloggiato = Utils.ConvertCSVtoDataTable(csv);
+                dtTipiAlloggiato = Utils.LoadCSVintoDataTable(csv);
                 sEsito.AppendFormat("  Tabella 'Tipi_Alloggiato': Ok ({0} Righe)\n", dtTipiAlloggiato.Rows.Count);
             }
             else
@@ -454,7 +461,7 @@ namespace InvioSchedineAlloggiatiWeb
                 File.WriteAllText("./Dati/TipiDocumento.csv", csv);
                 //tbEsitoVerifica.Text = csv;
 
-                dtTipiDocumento = Utils.ConvertCSVtoDataTable(csv);
+                dtTipiDocumento = Utils.LoadCSVintoDataTable(csv);
                 sEsito.AppendFormat("  Tabella 'Tipi_Documento':  Ok ({0} Righe)\n", dtTipiDocumento.Rows.Count);
             }
             else
@@ -470,7 +477,7 @@ namespace InvioSchedineAlloggiatiWeb
                 File.WriteAllText("./Dati/Luoghi.csv", csv);
                 //tbEsitoVerifica.Text = csv;
 
-                dtLuoghi = Utils.ConvertCSVtoDataTable(csv);
+                dtLuoghi = Utils.LoadCSVintoDataTable(csv);
                 
                 sEsito.AppendFormat("  Tabella 'Luoghi':          Ok ({0} Righe\n", dtLuoghi.Rows.Count);
             }

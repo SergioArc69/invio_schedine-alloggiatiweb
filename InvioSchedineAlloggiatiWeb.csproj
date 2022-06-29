@@ -101,7 +101,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="RecordSchedina.cs" />
+    <Compile Include="Models\RecordSchedina.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Misc\Utils.cs" />
     <Page Include="MainWindow.xaml">

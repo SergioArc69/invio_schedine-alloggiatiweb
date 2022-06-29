@@ -10,7 +10,17 @@ namespace InvioSchedineAlloggiatiWeb.Misc
     public class Utils
     {
 
-        public static DataTable ConvertCSVtoDataTable(string csv)
+        /// <summary>
+        /// LoadCSVintoDataTable
+        /// </summary>
+        /// <param name="csv">the whole csv to load</param>
+        /// <returns>a DataTable instance</returns>
+        /// <remarks>
+        /// Lines terminator is: '\n',
+        ///   Values separator is: ';',
+        ///   First line is managed as Header
+        /// </remarks>
+        public static DataTable LoadCSVintoDataTable(string csv)
         {
             DataTable dt = new DataTable();
 

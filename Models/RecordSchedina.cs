@@ -2,20 +2,19 @@
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace InvioSchedineAlloggiatiWeb
+namespace InvioSchedineAlloggiatiWeb.Models
 {
     public class RecordSchedina
     {
 
-
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1, Size = 168)]
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode, Pack = 1, Size = 168)]
         unsafe public struct RecSA
         {
             /// <summary>
             /// TipoAlloggiato (obbligatorio): Codice tabella TipoAlloggiati
             /// </summary>
             //public fixed char TipoAlloggiato[2];
-            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 2)]
             private char[] _TipoAlloggiato;
             public string TipoAlloggiato 
             {
@@ -27,7 +26,7 @@ namespace InvioSchedineAlloggiatiWeb
             /// DataArrivo (obbligatorio): gg/mm/aaaa
             /// </summary>
             //public fixed char DataArrivo[10];
-            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 20)]
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 10)]
             public char[] _DataArrivo;
             public string DataArrivo
             {
@@ -39,7 +38,7 @@ namespace InvioSchedineAlloggiatiWeb
             /// GiorniPermanenza (obbligatorio): min=1 - max=30
             /// </summary>
             //public fixed char GiorniPermanenza[2];
-            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 2)]
             private char[] _GiorniPermanenza;
             public string GiorniPermanenza
             {
@@ -51,7 +50,7 @@ namespace InvioSchedineAlloggiatiWeb
             /// Cognome (obbligatorio): Uppercase & blank-padded
             /// </summary>
             //public fixed char Cognome[50];
-            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 100)]
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 50)]
             private char[] _Cognome;
             public string Cognome
             {
@@ -63,7 +62,7 @@ namespace InvioSchedineAlloggiatiWeb
             /// Nome (obbligatorio): Uppercase & blank-padded
             /// </summary>
             //public fixed char Nome[30];
-            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 60)]
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 30)]
             private char[] _Nome;
             public string Nome
             {
@@ -75,7 +74,7 @@ namespace InvioSchedineAlloggiatiWeb
             /// Sesso (obbligatorio): 1=M - 2=F
             /// </summary>
             //public fixed char Sesso[1];
-            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 2)]
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 1)]
             private char[] _Sesso;
             public string Sesso
             {
@@ -87,7 +86,7 @@ namespace InvioSchedineAlloggiatiWeb
             /// DataNascita (obbligatorio): gg/mm/aaaa
             /// </summary>
             //public fixed char DataNascita[10];
-            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 20)]
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 10)]
             private char[] _DataNascita;
             public string DataNascita
             {
@@ -99,7 +98,7 @@ namespace InvioSchedineAlloggiatiWeb
             /// ComuneNascita (obbligatorio se StatoNascita==Italia): Codice tabella Comuni
             /// </summary>
             //public fixed char ComuneNascita[9];
-            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 18)]
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 9)]
             private char[] _ComuneNascita;
             public string ComuneNascita
             {
@@ -111,7 +110,7 @@ namespace InvioSchedineAlloggiatiWeb
             /// ProvinciaNascita (obbligatorio se StatoNascita==Italia): Sigla Provincia
             /// </summary>
             //public fixed char ProvinciaNascita[2];
-            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 2)]
             private char[] _ProvinciaNascita;
             public string ProvinciaNascita
             {
@@ -123,7 +122,7 @@ namespace InvioSchedineAlloggiatiWeb
             /// StatoNascita (obbligatorio): Codice tabella Stati
             /// </summary>
             //public fixed char StatoNascita[9];
-            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 18)]
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 9)]
             private char[] _StatoNascita;
             public string StatoNascita
             {
@@ -135,7 +134,7 @@ namespace InvioSchedineAlloggiatiWeb
             /// Cittadinanza (obbligatorio): Codice tabella Stati
             /// </summary>
             //public fixed char Cittadinanza[9];
-            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 18)]
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 9)]
             private char[] _Cittadinanza;
             public string Cittadinanza
             {
@@ -147,7 +146,7 @@ namespace InvioSchedineAlloggiatiWeb
             /// TipoDoc (obbligatorio se TipoAlloggiato in[16,17,18], riempire con blank): Codice tabella Documenti
             /// </summary>
             //public fixed char TipoDoc[5];
-            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 10)]
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 5)]
             private char[] _TipoDoc;
             public string TipoDoc
             {
@@ -159,7 +158,7 @@ namespace InvioSchedineAlloggiatiWeb
             /// NumeroDoc (obbligatorio se TipoAlloggiato in[16,17,18], riempire con blank):  numero del documento
             /// </summary>
             //public fixed char NumeroDoc[20];
-            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 40)]
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 20)]
             private char[] _NumeroDoc;
             public string NumeroDoc
             {
@@ -171,12 +170,17 @@ namespace InvioSchedineAlloggiatiWeb
             /// LuogoRilascioDoc (obbligatorio se TipoAlloggiato in[16,17,18], riempire con blank): Codice tabella Comuni o Stati
             /// </summary>
             //public fixed char LuogoRilascioDoc[9];
-            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 18)]
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 9)]
             private char[] _LuogoRilascioDoc;
             public string LuogoRilascioDoc
             { 
                 get { return new string(_LuogoRilascioDoc); }
                 set { this._LuogoRilascioDoc = value.ToCharArray(); }
+            }
+
+            public override string ToString()
+            {
+                return string.Format($"{TipoAlloggiato}{DataArrivo}{GiorniPermanenza}{Cognome}{Nome}{Sesso}{DataNascita}{ComuneNascita}{ProvinciaNascita}{StatoNascita}{Cittadinanza}{TipoDoc}{NumeroDoc}{LuogoRilascioDoc}");
             }
         }
 
@@ -205,8 +209,8 @@ namespace InvioSchedineAlloggiatiWeb
 
         public override string ToString()
         {
-            return line.ToString();            
+            return line.ToString();
         }
-
     }
 }
+

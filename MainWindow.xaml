@@ -65,6 +65,11 @@
                 <DataGridTextColumn Header="Numero Documento" Binding="{Binding NumeroDoc}" />
                 <DataGridTextColumn Header="Luogo Ril. Documento" Binding="{Binding LuogoRilascioDoc}" />
             </DataGrid.Columns>
+            <DataGrid.Resources>
+                <Style TargetType="DataGridRow">
+                    <EventSetter Event="MouseDoubleClick" Handler="dgSchedine_Row_DoubleClick"/>
+                </Style>
+            </DataGrid.Resources>
         </DataGrid>
 
         <Button x:Name="btnCheckSchedine" Content="Verifica Schedine" HorizontalAlignment="Left" Height="24" Margin="5,4,0,0" Grid.Row="3" VerticalAlignment="Top" Width="115" Click="btnCheckSchedine_Click" IsEnabled="False"/>

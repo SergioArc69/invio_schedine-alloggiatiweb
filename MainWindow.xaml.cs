@@ -418,6 +418,10 @@ namespace InvioSchedineAlloggiatiWeb
         {
             DataGridRow row = sender as DataGridRow;
             RecordSchedina rs = (RecordSchedina)row.Item;
+            Schedina schedina = new Schedina();
+            schedina.cbTipoAlloggiato.ItemsSource = dtTipiAlloggiato.AsDataView();            
+            schedina.SetRecord(rs);
+            schedina.ShowDialog();
         }
 
         private void btnCheckToken_Click(object sender, RoutedEventArgs e)

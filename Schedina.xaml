@@ -1,0 +1,36 @@
+﻿<Window x:Class="InvioSchedineAlloggiatiWeb.Schedina"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:System="clr-namespace:System;assembly=mscorlib"
+        xmlns:xctk="clr-namespace:Xceed.Wpf.Toolkit;assembly=Xceed.Wpf.Toolkit"
+        xmlns:local="clr-namespace:InvioSchedineAlloggiatiWeb"
+        mc:Ignorable="d"
+        Title="Schedina" Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="10"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+
+        <Label x:Name="lblTipoAlloggiato" Content="Tipo Alloggiato:" Grid.Row="1" HorizontalAlignment="Left" Margin="10,1,0,0" Width="140" Height="27"/>
+        <ComboBox x:Name="cbTipoAlloggiato"  Grid.Row="1" HorizontalAlignment="Left" Margin="150,0,0,0" Width="300" Height="27" VerticalAlignment="Center" >
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Descrizione}" Tag="{Binding Codice}" />
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
+
+        <Label x:Name="lblDataArrivo" Content="Data arrivo:" Grid.Row="2" HorizontalAlignment="Left" Margin="10,1,0,0" Width="140" Height="27"/>
+        <DatePicker x:Name="dpDataArrivo" DisplayDateEnd="{Binding Mode=OneWay, Source={x:Static System:DateTime.Today}}" HorizontalAlignment="Left" Margin="150,0,0,0" Grid.Row="2" VerticalAlignment="Center"/>
+        
+        <Label x:Name="lblGiorniPerm" Content="Giorni di permanenza:" Grid.Row="3" HorizontalAlignment="Left" Margin="10,1,0,0" Width="140" Height="27"/>
+        <xctk:IntegerUpDown Name="iudGiorniPerm" Value="1" Minimum="1" Maximum="30" TextAlignment="Right" HorizontalAlignment="Left" Margin="150,0,0,0" Grid.Row="3" MinWidth="40" VerticalAlignment="Center"/>
+
+    </Grid>
+</Window>

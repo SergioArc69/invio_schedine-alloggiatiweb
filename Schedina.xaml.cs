@@ -22,6 +22,9 @@ namespace InvioSchedineAlloggiatiWeb
     /// </summary>
     public partial class Schedina : Window
     {
+        public static bool BooleanTrue = true;
+        public static bool BooleanFalse = false;
+
         public Schedina()
         {
             InitializeComponent();
@@ -31,10 +34,33 @@ namespace InvioSchedineAlloggiatiWeb
         {
             DataRowView selRow = cbTipoAlloggiato.Items.OfType<DataRowView>().Single(e => (string)e["Codice"] == rs.TipoAlloggiato);
             cbTipoAlloggiato.SelectedItem = selRow;
+
             dpDataArrivo.SelectedDate = DateTime.ParseExact(rs.DataArrivo, "dd/MM/yyyy", CultureInfo.InvariantCulture);
             DateTime ieri = DateTime.Today.AddDays(-1);
             dpDataArrivo.DisplayDateStart = dpDataArrivo.SelectedDate < ieri ? dpDataArrivo.SelectedDate : ieri;
+            
             iudGiorniPerm.Value = int.Parse(rs.GiorniPermanenza);
+
+            tbCognome.Text = rs.Cognome.Trim();
+
+            tbNome.Text = rs.Nome.Trim();
+
         }
     }
+
+    public class RadioButtonCheckedConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter,
+            System.Globalization.CultureInfo culture)
+        {
+            return value.Equals(parameter);
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter,
+            System.Globalization.CultureInfo culture)
+        {
+            return value.Equals(true) ? parameter : Binding.DoNothing;
+        }
+    }
+
 }

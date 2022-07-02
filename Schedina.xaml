@@ -15,6 +15,9 @@
             <RowDefinition Height="30"/>
             <RowDefinition Height="30"/>
             <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
 
         <Label x:Name="lblTipoAlloggiato" Content="Tipo Alloggiato:" Grid.Row="1" HorizontalAlignment="Left" Margin="10,1,0,0" Width="140" Height="27"/>
@@ -31,6 +34,25 @@
         
         <Label x:Name="lblGiorniPerm" Content="Giorni di permanenza:" Grid.Row="3" HorizontalAlignment="Left" Margin="10,1,0,0" Width="140" Height="27"/>
         <xctk:IntegerUpDown Name="iudGiorniPerm" Value="1" Minimum="1" Maximum="30" TextAlignment="Right" HorizontalAlignment="Left" Margin="150,0,0,0" Grid.Row="3" MinWidth="40" VerticalAlignment="Center"/>
+
+        <Label x:Name="lblCognome" Content="Cognome:" Grid.Row="4" HorizontalAlignment="Left" Margin="10,1,0,0" Width="140" Height="27"/>
+        <TextBox x:Name="tbCognome" Margin="150,0,0,0" Grid.Row="4" HorizontalAlignment="Left" VerticalAlignment="Center" Width="300"/>
+
+        <Label x:Name="lblNome" Content="Nome:" Grid.Row="5" HorizontalAlignment="Left" Margin="10,1,0,0" Width="140" Height="27"/>
+        <TextBox x:Name="tbNome" Margin="150,0,0,0" Grid.Row="5" HorizontalAlignment="Left" VerticalAlignment="Center" Width="300"/>
+
+        <Label x:Name="lblSesso" Content="Sesso:" Grid.Row="6" HorizontalAlignment="Left" Margin="10,1,0,0" Width="140" Height="27"/>
+
+        <RadioButton GroupName="group1" Grid.Row="6" Margin="150,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center">
+            <TextBlock TextWrapping="Wrap" Text="Maschio" />
+        </RadioButton>
+        <!-- IsChecked="{Binding BooleanProperty, Converter={StaticResource RadioButtonCheckedConverter}, ConverterParameter={x:Static src:Schedina.BooleanTrue}}"> -->
+
+        <RadioButton GroupName="group1" Grid.Row="6" Margin="250,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center">
+            <TextBlock TextWrapping="Wrap" Text="Femmina"/>
+        </RadioButton>
+        <!-- IsChecked="{Binding BooleanProperty, Converter={StaticResource RadioButtonCheckedConverter}, ConverterParameter={x:Static src:Schedina.BooleanFalse}}"-->
+
 
     </Grid>
 </Window>

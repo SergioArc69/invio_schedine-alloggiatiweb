@@ -45,6 +45,44 @@ namespace InvioSchedineAlloggiatiWeb
 
             tbNome.Text = rs.Nome.Trim();
 
+            if (rs.Sesso == "1")
+            {
+                rbMaschio.IsChecked = true;
+            }
+            else
+            {
+                rbFemmina.IsChecked = true;
+            }
+            if (dpDataNascita.DisplayDateEnd.HasValue)
+            {
+                dpDataNascita.DisplayDateStart = dpDataNascita.DisplayDateEnd.Value.AddYears(-120);
+            }
+            dpDataNascita.SelectedDate = DateTime.ParseExact(rs.DataNascita, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+
+            selRow = cbStatoNascita.Items.OfType<DataRowView>().Single(e => (string)e["Codice"] == rs.StatoNascita);
+            cbStatoNascita.SelectedItem = selRow;
+
+            if (selRow.Row.Field<string>("Descrizione").ToUpper().Equals("ITALIA"))
+            {
+                selRow = cbComuneNascita.Items.OfType<DataRowView>().Single(e => (string)e["Codice"] == rs.ComuneNascita);
+                cbComuneNascita.SelectedItem = selRow;
+                cbComuneNascita.IsReadOnly = false;
+                
+            }
+            else
+            {
+                cbComuneNascita.Text = "         ";
+                cbComuneNascita.IsReadOnly = true;
+                tbProvinciaNascita.Text = "  ";
+            }
+
+            selRow = cbStatoCittadinanza.Items.OfType<DataRowView>().Single(e => (string)e["Codice"] == rs.Cittadinanza);
+            cbStatoCittadinanza.SelectedItem = selRow;
+        }
+
+        private void cbComuneNascita_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            tbProvinciaNascita.Text = ((DataRowView)cbComuneNascita.SelectedItem).Row.Field<string>("Provincia").ToUpper();
         }
     }
 

@@ -32,6 +32,8 @@ namespace InvioSchedineAlloggiatiWeb
 
         ObservableCollection<RecordSchedina> schedine = null;
         DataTable dtLuoghi = null,
+                  dtStati = null,
+                  dtComuni = null,
                   dtTipiAlloggiato = null,
                   dtTipiDocumento = null;
 
@@ -93,6 +95,8 @@ namespace InvioSchedineAlloggiatiWeb
                     {
                         csv = File.ReadAllText("./Dati/Luoghi.csv");
                         dtLuoghi = Utils.LoadCSVintoDataTable(csv);
+                        dtStati = dtLuoghi.Select("Provincia = 'ES'", "Descrizione").CopyToDataTable();
+                        dtComuni = dtLuoghi.Select("Provincia <> 'ES'", "Descrizione").CopyToDataTable();
 
                         sEsito.AppendFormat("  Tabella 'Luoghi':          {0} ({1} Righe)\n", dtLuoghi.Rows.Count > 0 ? "Ok" : "KO", dtLuoghi.Rows.Count);
 
@@ -106,7 +110,7 @@ namespace InvioSchedineAlloggiatiWeb
                 }
                 catch (Exception ex)
                 {
-                    sEsito.AppendFormat("\n  Exception: {0}", ex.Message); 
+                    sEsito.AppendFormat("\n  Exception: {0}", ex.Message);
                     bEnableDownload = true;
                 }
 
@@ -419,7 +423,10 @@ namespace InvioSchedineAlloggiatiWeb
             DataGridRow row = sender as DataGridRow;
             RecordSchedina rs = (RecordSchedina)row.Item;
             Schedina schedina = new Schedina();
-            schedina.cbTipoAlloggiato.ItemsSource = dtTipiAlloggiato.AsDataView();            
+            schedina.cbTipoAlloggiato.ItemsSource = dtTipiAlloggiato.AsDataView();
+            schedina.cbComuneNascita.ItemsSource = dtLuoghi.AsDataView();
+            schedina.cbStatoNascita.ItemsSource = dtStati.AsDataView();
+            schedina.cbStatoCittadinanza.ItemsSource = dtStati.AsDataView();
             schedina.SetRecord(rs);
             schedina.ShowDialog();
         }
@@ -482,7 +489,9 @@ namespace InvioSchedineAlloggiatiWeb
                 //tbEsitoVerifica.Text = csv;
 
                 dtLuoghi = Utils.LoadCSVintoDataTable(csv);
-                
+                dtStati = dtLuoghi.Select("Provincia = 'ES'", "Descrizione").CopyToDataTable();
+                dtComuni = dtLuoghi.Select("Provincia <> 'ES'", "Descrizione").CopyToDataTable();
+
                 sEsito.AppendFormat("  Tabella 'Luoghi':          Ok ({0} Righe\n", dtLuoghi.Rows.Count);
             }
             else

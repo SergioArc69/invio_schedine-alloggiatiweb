@@ -29,7 +29,12 @@ namespace InvioSchedineAlloggiatiWeb.Misc
             string[] headers = csvLines[0].Split(';');
             foreach (string header in headers)
             {
-                dt.Columns.Add(header);
+                DataColumn dc = dt.Columns.Add(header);
+
+                if (header.Contains("Data"))
+                {
+                    dc.DataType = Type.GetType("System.DateTime");
+                }
             }
 
             for (int r = 1; r < csvLines.Count(); r++)
@@ -41,7 +46,17 @@ namespace InvioSchedineAlloggiatiWeb.Misc
                     DataRow dr = dt.NewRow();
                     for (int i = 0; i < headers.Length; i++)
                     {
-                        dr[i] = cells[i];
+                        if (headers[i].Contains("Data"))
+                        {
+                            if (string.IsNullOrEmpty(cells[i]))
+                            {
+                                dr[i] = DBNull.Value;
+                            }
+                            else
+                                dr[i] = DateTime.Parse(cells[i]);
+                        }
+                        else
+                            dr[i] = cells[i];
                     }
                     dt.Rows.Add(dr);
                 }

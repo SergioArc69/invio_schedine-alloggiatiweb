@@ -18,6 +18,11 @@
             <RowDefinition Height="30"/>
             <RowDefinition Height="30"/>
             <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
 
         <Label x:Name="lblTipoAlloggiato" Content="Tipo Alloggiato:" Grid.Row="1" HorizontalAlignment="Left" Margin="10,1,0,0" Width="140" Height="27"/>
@@ -43,16 +48,48 @@
 
         <Label x:Name="lblSesso" Content="Sesso:" Grid.Row="6" HorizontalAlignment="Left" Margin="10,1,0,0" Width="140" Height="27"/>
 
-        <RadioButton GroupName="group1" Grid.Row="6" Margin="150,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center">
+        <RadioButton x:Name="rbMaschio" GroupName="rbgSesso" Grid.Row="6" Margin="150,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center">
             <TextBlock TextWrapping="Wrap" Text="Maschio" />
         </RadioButton>
         <!-- IsChecked="{Binding BooleanProperty, Converter={StaticResource RadioButtonCheckedConverter}, ConverterParameter={x:Static src:Schedina.BooleanTrue}}"> -->
 
-        <RadioButton GroupName="group1" Grid.Row="6" Margin="250,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center">
+        <RadioButton x:Name="rbFemmina" GroupName="rbgSesso" Grid.Row="6" Margin="250,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center">
             <TextBlock TextWrapping="Wrap" Text="Femmina"/>
         </RadioButton>
         <!-- IsChecked="{Binding BooleanProperty, Converter={StaticResource RadioButtonCheckedConverter}, ConverterParameter={x:Static src:Schedina.BooleanFalse}}"-->
 
+        <Label x:Name="lblDataNascita" Content="Data di Nascita:" Grid.Row="7" HorizontalAlignment="Left" Margin="10,1,0,0" Width="140" Height="27"/>
+        <DatePicker x:Name="dpDataNascita" DisplayDateEnd="{Binding Mode=OneWay, Source={x:Static System:DateTime.Today}}" HorizontalAlignment="Left" Margin="150,0,0,0" Grid.Row="7" VerticalAlignment="Center"/>
+
+        <Label x:Name="lblComuneNascita" Content="Comune di Nascita:" Grid.Row="8" HorizontalAlignment="Left" Margin="10,1,0,0" Width="140" Height="27"/>
+        <ComboBox x:Name="cbComuneNascita"  Grid.Row="8" HorizontalAlignment="Left" Margin="150,0,0,0" Width="300" Height="27" VerticalAlignment="Center" SelectionChanged="cbComuneNascita_SelectionChanged" >
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Descrizione}" Tag="{Binding Codice}" />
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
+
+        <Label x:Name="lblProvNascita" Content="Provincia Nascita:" Grid.Row="9" HorizontalAlignment="Left" Margin="10,1,0,0" Width="140" Height="27"/>
+        <TextBox x:Name="tbProvinciaNascita" Text="  " Margin="150,0,0,0" Grid.Row="9" HorizontalAlignment="Left" VerticalAlignment="Center" Width="30" IsReadOnly="True"/>
+
+        <Label x:Name="lblStatoNascita" Content="Stato di Nascita:" Grid.Row="10" HorizontalAlignment="Left" Margin="10,1,0,0" Width="140" Height="27"/>
+        <ComboBox x:Name="cbStatoNascita"  Grid.Row="10" HorizontalAlignment="Left" Margin="150,0,0,0" Width="300" Height="27" VerticalAlignment="Center" >
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Descrizione}" Tag="{Binding Codice}" />
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
+
+        <Label x:Name="lblStatoCittadinanza" Content="Stato Cittadinanza:" Grid.Row="11" HorizontalAlignment="Left" Margin="10,1,0,0" Width="140" Height="27"/>
+        <ComboBox x:Name="cbStatoCittadinanza" Grid.Row="11" HorizontalAlignment="Left" Margin="150,0,0,0" Width="300" Height="27" VerticalAlignment="Center" >
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Descrizione}" Tag="{Binding Codice}" />
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
 
     </Grid>
 </Window>

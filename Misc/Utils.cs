@@ -27,6 +27,8 @@ namespace InvioSchedineAlloggiatiWeb.Misc
             string[] csvLines = csv.Split('\n');
 
             string[] headers = csvLines[0].Split(';');
+
+            int iDescrizione = -1;
             foreach (string header in headers)
             {
                 DataColumn dc = dt.Columns.Add(header);
@@ -34,6 +36,10 @@ namespace InvioSchedineAlloggiatiWeb.Misc
                 if (header.Contains("Data"))
                 {
                     dc.DataType = Type.GetType("System.DateTime");
+                }
+                else if (header.Equals("Descrizione"))
+                {
+                    iDescrizione = dt.Columns.Count - 1;
                 }
             }
 
@@ -53,7 +59,14 @@ namespace InvioSchedineAlloggiatiWeb.Misc
                                 dr[i] = DBNull.Value;
                             }
                             else
-                                dr[i] = DateTime.Parse(cells[i]);
+                            {
+                                DateTime d = DateTime.Parse(cells[i]);
+                                dr[i] = d;
+                                if (iDescrizione > -1)
+                                {
+                                    dr[iDescrizione] = string.Format("{0} (fino al {1})", dr[iDescrizione], d.ToString("d"));
+                                }
+                            }
                         }
                         else
                             dr[i] = cells[i];

@@ -7,7 +7,7 @@
         xmlns:xctk="clr-namespace:Xceed.Wpf.Toolkit;assembly=Xceed.Wpf.Toolkit"
         xmlns:local="clr-namespace:InvioSchedineAlloggiatiWeb"
         mc:Ignorable="d"
-        Title="Schedina" Height="450" Width="800">
+        Title="Schedina" Height="450" Width="643.684">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="10"/>
@@ -61,8 +61,19 @@
         <Label x:Name="lblDataNascita" Content="Data di Nascita:" Grid.Row="7" HorizontalAlignment="Left" Margin="10,1,0,0" Width="140" Height="27"/>
         <DatePicker x:Name="dpDataNascita" DisplayDateEnd="{Binding Mode=OneWay, Source={x:Static System:DateTime.Today}}" HorizontalAlignment="Left" Margin="150,0,0,0" Grid.Row="7" VerticalAlignment="Center"/>
 
-        <Label x:Name="lblComuneNascita" Content="Comune di Nascita:" Grid.Row="8" HorizontalAlignment="Left" Margin="10,1,0,0" Width="140" Height="27"/>
-        <ComboBox x:Name="cbComuneNascita"  Grid.Row="8" HorizontalAlignment="Left" Margin="150,0,0,0" Width="300" Height="27" VerticalAlignment="Center" SelectionChanged="cbComuneNascita_SelectionChanged" >
+        <Label x:Name="lblStatoNascita" Content="Stato di Nascita:" Grid.Row="8" HorizontalAlignment="Left" Margin="10,1,0,0" Width="140" Height="27"/>
+        <ComboBox x:Name="cbStatoNascita"  Grid.Row="8" HorizontalAlignment="Left" Margin="150,0,0,0" Width="300" Height="27" VerticalAlignment="Center" 
+                  IsEditable="True" IsTextSearchEnabled="True" TextSearch.TextPath="Descrizione" SelectionChanged="cbStatoNascita_SelectionChanged" Loaded="cb_Loaded" >
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Descrizione}" Tag="{Binding Codice}" />
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
+        
+        <Label x:Name="lblComuneNascita" Content="Comune di Nascita:" Grid.Row="9" HorizontalAlignment="Left" Margin="10,1,0,0" Width="140" Height="27"/>
+        <ComboBox x:Name="cbComuneNascita"  Grid.Row="9" HorizontalAlignment="Left" Margin="150,0,0,0" Width="300" Height="27" VerticalAlignment="Center" 
+                  IsEditable="True" IsTextSearchEnabled="True" TextSearch.TextPath="Descrizione" SelectionChanged="cbComuneNascita_SelectionChanged" Loaded="cb_Loaded" >
             <ComboBox.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding Descrizione}" Tag="{Binding Codice}" />
@@ -70,20 +81,12 @@
             </ComboBox.ItemTemplate>
         </ComboBox>
 
-        <Label x:Name="lblProvNascita" Content="Provincia Nascita:" Grid.Row="9" HorizontalAlignment="Left" Margin="10,1,0,0" Width="140" Height="27"/>
-        <TextBox x:Name="tbProvinciaNascita" Text="  " Margin="150,0,0,0" Grid.Row="9" HorizontalAlignment="Left" VerticalAlignment="Center" Width="30" IsReadOnly="True"/>
-
-        <Label x:Name="lblStatoNascita" Content="Stato di Nascita:" Grid.Row="10" HorizontalAlignment="Left" Margin="10,1,0,0" Width="140" Height="27"/>
-        <ComboBox x:Name="cbStatoNascita"  Grid.Row="10" HorizontalAlignment="Left" Margin="150,0,0,0" Width="300" Height="27" VerticalAlignment="Center" >
-            <ComboBox.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock Text="{Binding Descrizione}" Tag="{Binding Codice}" />
-                </DataTemplate>
-            </ComboBox.ItemTemplate>
-        </ComboBox>
+        <Label x:Name="lblProvNascita" Content="Provincia Nascita:" Grid.Row="10" HorizontalAlignment="Left" Margin="10,1,0,0" Width="140" Height="27"/>
+        <TextBox x:Name="tbProvinciaNascita" Text="  " Margin="150,0,0,0" Grid.Row="10" HorizontalAlignment="Left" VerticalAlignment="Center" Width="30" IsReadOnly="True"/>
 
         <Label x:Name="lblStatoCittadinanza" Content="Stato Cittadinanza:" Grid.Row="11" HorizontalAlignment="Left" Margin="10,1,0,0" Width="140" Height="27"/>
-        <ComboBox x:Name="cbStatoCittadinanza" Grid.Row="11" HorizontalAlignment="Left" Margin="150,0,0,0" Width="300" Height="27" VerticalAlignment="Center" >
+        <ComboBox x:Name="cbStatoCittadinanza" Grid.Row="11" HorizontalAlignment="Left" 
+                  IsEditable="True" IsTextSearchEnabled="True" TextSearch.TextPath="Descrizione" Margin="150,0,0,0" Width="300" Height="27" VerticalAlignment="Center" Loaded="cb_Loaded" >
             <ComboBox.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding Descrizione}" Tag="{Binding Codice}" />

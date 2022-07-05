@@ -25,6 +25,8 @@ namespace InvioSchedineAlloggiatiWeb
         public static bool BooleanTrue = true;
         public static bool BooleanFalse = false;
 
+        RecordSchedina recordSchedina = null;
+
         public Schedina()
         {
             InitializeComponent();
@@ -32,7 +34,9 @@ namespace InvioSchedineAlloggiatiWeb
 
         internal void SetRecord(RecordSchedina rs)
         {
-            DataRowView selRow = cbTipoAlloggiato.Items.OfType<DataRowView>().Single(e => (string)e["Codice"] == rs.TipoAlloggiato);
+            recordSchedina = rs;
+
+            DataRowView selRow = cbTipoAlloggiato.Items.OfType<DataRowView>().Single(r => (string)r["Codice"] == rs.TipoAlloggiato);
             cbTipoAlloggiato.SelectedItem = selRow;
 
             dpDataArrivo.SelectedDate = DateTime.ParseExact(rs.DataArrivo, "dd/MM/yyyy", CultureInfo.InvariantCulture);
@@ -59,12 +63,13 @@ namespace InvioSchedineAlloggiatiWeb
             }
             dpDataNascita.SelectedDate = DateTime.ParseExact(rs.DataNascita, "dd/MM/yyyy", CultureInfo.InvariantCulture);
 
-            selRow = cbStatoNascita.Items.OfType<DataRowView>().Single(e => (string)e["Codice"] == rs.StatoNascita);
+            selRow = cbStatoNascita.Items.OfType<DataRowView>().Single(r => (string)r["Codice"] == rs.StatoNascita);
             cbStatoNascita.SelectedItem = selRow;
 
+            /*
             if (selRow.Row.Field<string>("Descrizione").ToUpper().Equals("ITALIA"))
             {
-                selRow = cbComuneNascita.Items.OfType<DataRowView>().Single(e => (string)e["Codice"] == rs.ComuneNascita);
+                selRow = cbComuneNascita.Items.OfType<DataRowView>().Single(r => (string)r["Codice"] == rs.ComuneNascita);
                 cbComuneNascita.SelectedItem = selRow;
                 cbComuneNascita.IsReadOnly = false;
                 
@@ -75,14 +80,53 @@ namespace InvioSchedineAlloggiatiWeb
                 cbComuneNascita.IsReadOnly = true;
                 tbProvinciaNascita.Text = "  ";
             }
+            */
 
-            selRow = cbStatoCittadinanza.Items.OfType<DataRowView>().Single(e => (string)e["Codice"] == rs.Cittadinanza);
+            selRow = cbStatoCittadinanza.Items.OfType<DataRowView>().Single(r => (string)r["Codice"] == rs.Cittadinanza);
             cbStatoCittadinanza.SelectedItem = selRow;
         }
 
         private void cbComuneNascita_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            tbProvinciaNascita.Text = ((DataRowView)cbComuneNascita.SelectedItem).Row.Field<string>("Provincia").ToUpper();
+            if (cbComuneNascita.SelectedItem != null)
+            {
+                tbProvinciaNascita.Text = ((DataRowView)cbComuneNascita.SelectedItem).Row.Field<string>("Provincia").ToUpper();
+            }
+            else
+            {
+                tbProvinciaNascita.Text = "  ";
+            }
+        }
+
+        private void cbStatoNascita_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (((DataRowView)cbStatoNascita.SelectedItem).Row.Field<string>("Descrizione").ToUpper().Equals("ITALIA"))
+            {
+                DataRowView selRow = null;
+                try
+                {
+                    selRow = cbComuneNascita.Items.OfType<DataRowView>().Single(r => (string)r["Codice"] == recordSchedina.ComuneNascita);
+                    cbComuneNascita.SelectedItem = selRow;
+                    cbComuneNascita.Text = selRow.Row.Field<string>("Descrizione");
+                }
+                catch {}                
+                
+                cbComuneNascita.IsReadOnly = false;
+                cbComuneNascita.IsEnabled = true;
+            }
+            else
+            {
+                cbComuneNascita.IsReadOnly = true;
+                cbComuneNascita.IsEnabled = false;
+                cbComuneNascita.Text = "         ";
+                tbProvinciaNascita.Text = "  ";
+            }
+        }
+
+        private void cb_Loaded(object sender, RoutedEventArgs e)
+        {
+            ComboBox cb = sender as ComboBox;
+            (cb.Template.FindName("PART_EditableTextBox", cb) as TextBox).CharacterCasing = CharacterCasing.Upper;
         }
     }
 

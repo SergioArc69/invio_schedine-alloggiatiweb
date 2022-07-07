@@ -7,8 +7,8 @@
         xmlns:xctk="clr-namespace:Xceed.Wpf.Toolkit;assembly=Xceed.Wpf.Toolkit"
         xmlns:local="clr-namespace:InvioSchedineAlloggiatiWeb"
         mc:Ignorable="d"
-        Title="Schedina" Height="450" Width="643.684">
-    <Grid>
+        Title="Schedina" Height="510" Width="565">
+    <Grid Margin="0,0,0,0">
         <Grid.RowDefinitions>
             <RowDefinition Height="10"/>
             <RowDefinition Height="30"/>
@@ -23,10 +23,15 @@
             <RowDefinition Height="30"/>
             <RowDefinition Height="30"/>
             <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="10"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Label x:Name="lblTipoAlloggiato" Content="Tipo Alloggiato:" Grid.Row="1" HorizontalAlignment="Left" Margin="10,1,0,0" Width="140" Height="27"/>
-        <ComboBox x:Name="cbTipoAlloggiato"  Grid.Row="1" HorizontalAlignment="Left" Margin="150,0,0,0" Width="300" Height="27" VerticalAlignment="Center" >
+        <Label x:Name="lblTipoAlloggiato" Content="Tipo Alloggiato:" Grid.Row="1" HorizontalAlignment="Left" Margin="10,1,0,0" Width="160" Height="27"/>
+        <ComboBox x:Name="cbTipoAlloggiato"  Grid.Row="1" HorizontalAlignment="Left" Margin="170,0,0,0" Width="300" Height="27" VerticalAlignment="Center" >
             <ComboBox.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding Descrizione}" Tag="{Binding Codice}" />
@@ -34,35 +39,33 @@
             </ComboBox.ItemTemplate>
         </ComboBox>
 
-        <Label x:Name="lblDataArrivo" Content="Data arrivo:" Grid.Row="2" HorizontalAlignment="Left" Margin="10,1,0,0" Width="140" Height="27"/>
-        <DatePicker x:Name="dpDataArrivo" DisplayDateEnd="{Binding Mode=OneWay, Source={x:Static System:DateTime.Today}}" HorizontalAlignment="Left" Margin="150,0,0,0" Grid.Row="2" VerticalAlignment="Center"/>
-        
-        <Label x:Name="lblGiorniPerm" Content="Giorni di permanenza:" Grid.Row="3" HorizontalAlignment="Left" Margin="10,1,0,0" Width="140" Height="27"/>
-        <xctk:IntegerUpDown Name="iudGiorniPerm" Value="1" Minimum="1" Maximum="30" TextAlignment="Right" HorizontalAlignment="Left" Margin="150,0,0,0" Grid.Row="3" MinWidth="40" VerticalAlignment="Center"/>
+        <Label x:Name="lblDataArrivo" Content="Data arrivo:" Grid.Row="2" HorizontalAlignment="Left" Margin="10,1,0,0" Width="160" Height="27"/>
+        <DatePicker x:Name="dpDataArrivo" DisplayDateEnd="{Binding Mode=OneWay, Source={x:Static System:DateTime.Today}}" HorizontalAlignment="Left" Margin="170,0,0,0" Grid.Row="2" VerticalAlignment="Center"/>
 
-        <Label x:Name="lblCognome" Content="Cognome:" Grid.Row="4" HorizontalAlignment="Left" Margin="10,1,0,0" Width="140" Height="27"/>
-        <TextBox x:Name="tbCognome" Margin="150,0,0,0" Grid.Row="4" HorizontalAlignment="Left" VerticalAlignment="Center" Width="300"/>
+        <Label x:Name="lblGiorniPerm" Content="Giorni di permanenza:" Grid.Row="3" HorizontalAlignment="Left" Margin="10,1,0,0" Width="160" Height="27"/>
+        <xctk:IntegerUpDown Name="iudGiorniPerm" Value="1" Minimum="1" Maximum="30" TextAlignment="Right" HorizontalAlignment="Left" Margin="170,0,0,0" Grid.Row="3" MinWidth="40" VerticalAlignment="Center"/>
 
-        <Label x:Name="lblNome" Content="Nome:" Grid.Row="5" HorizontalAlignment="Left" Margin="10,1,0,0" Width="140" Height="27"/>
-        <TextBox x:Name="tbNome" Margin="150,0,0,0" Grid.Row="5" HorizontalAlignment="Left" VerticalAlignment="Center" Width="300"/>
+        <Label x:Name="lblCognome" Content="Cognome:" Grid.Row="4" HorizontalAlignment="Left" Margin="10,1,0,0" Width="160" Height="27"/>
+        <TextBox x:Name="tbCognome" MaxLength="50" Margin="170,0,0,0" Grid.Row="4" HorizontalAlignment="Left" VerticalAlignment="Center" Width="300"/>
 
-        <Label x:Name="lblSesso" Content="Sesso:" Grid.Row="6" HorizontalAlignment="Left" Margin="10,1,0,0" Width="140" Height="27"/>
+        <Label x:Name="lblNome" Content="Nome:" Grid.Row="5" HorizontalAlignment="Left" Margin="10,1,0,0" Width="160" Height="27"/>
+        <TextBox x:Name="tbNome" MaxLength="30" Margin="170,0,0,0" Grid.Row="5" HorizontalAlignment="Left" VerticalAlignment="Center" Width="300"/>
 
-        <RadioButton x:Name="rbMaschio" GroupName="rbgSesso" Grid.Row="6" Margin="150,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center">
+        <Label x:Name="lblSesso" Content="Sesso:" Grid.Row="6" HorizontalAlignment="Left" Margin="10,1,0,0" Width="160" Height="27"/>
+        <RadioButton x:Name="rbMaschio" GroupName="rbgSesso" Grid.Row="6" Margin="170,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center">
             <TextBlock TextWrapping="Wrap" Text="Maschio" />
         </RadioButton>
         <!-- IsChecked="{Binding BooleanProperty, Converter={StaticResource RadioButtonCheckedConverter}, ConverterParameter={x:Static src:Schedina.BooleanTrue}}"> -->
-
         <RadioButton x:Name="rbFemmina" GroupName="rbgSesso" Grid.Row="6" Margin="250,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center">
             <TextBlock TextWrapping="Wrap" Text="Femmina"/>
         </RadioButton>
         <!-- IsChecked="{Binding BooleanProperty, Converter={StaticResource RadioButtonCheckedConverter}, ConverterParameter={x:Static src:Schedina.BooleanFalse}}"-->
 
-        <Label x:Name="lblDataNascita" Content="Data di Nascita:" Grid.Row="7" HorizontalAlignment="Left" Margin="10,1,0,0" Width="140" Height="27"/>
-        <DatePicker x:Name="dpDataNascita" DisplayDateEnd="{Binding Mode=OneWay, Source={x:Static System:DateTime.Today}}" HorizontalAlignment="Left" Margin="150,0,0,0" Grid.Row="7" VerticalAlignment="Center"/>
+        <Label x:Name="lblDataNascita" Content="Data di Nascita:" Grid.Row="7" HorizontalAlignment="Left" Margin="10,1,0,0" Width="160" Height="27"/>
+        <DatePicker x:Name="dpDataNascita" DisplayDateEnd="{Binding Mode=OneWay, Source={x:Static System:DateTime.Today}}" HorizontalAlignment="Left" Margin="170,0,0,0" Grid.Row="7" VerticalAlignment="Center"/>
 
-        <Label x:Name="lblStatoNascita" Content="Stato di Nascita:" Grid.Row="8" HorizontalAlignment="Left" Margin="10,1,0,0" Width="140" Height="27"/>
-        <ComboBox x:Name="cbStatoNascita"  Grid.Row="8" HorizontalAlignment="Left" Margin="150,0,0,0" Width="300" Height="27" VerticalAlignment="Center" 
+        <Label x:Name="lblStatoNascita" Content="Stato di Nascita:" Grid.Row="8" HorizontalAlignment="Left" Margin="10,1,0,0" Width="160" Height="27"/>
+        <ComboBox x:Name="cbStatoNascita"  Grid.Row="8" HorizontalAlignment="Left" Margin="170,0,0,0" Width="300" Height="27" VerticalAlignment="Center" 
                   IsEditable="True" IsTextSearchEnabled="True" TextSearch.TextPath="Descrizione" SelectionChanged="cbStatoNascita_SelectionChanged" Loaded="cb_Loaded" >
             <ComboBox.ItemTemplate>
                 <DataTemplate>
@@ -70,9 +73,9 @@
                 </DataTemplate>
             </ComboBox.ItemTemplate>
         </ComboBox>
-        
-        <Label x:Name="lblComuneNascita" Content="Comune di Nascita:" Grid.Row="9" HorizontalAlignment="Left" Margin="10,1,0,0" Width="140" Height="27"/>
-        <ComboBox x:Name="cbComuneNascita"  Grid.Row="9" HorizontalAlignment="Left" Margin="150,0,0,0" Width="300" Height="27" VerticalAlignment="Center" 
+
+        <Label x:Name="lblComuneNascita" Content="Comune di Nascita:" Grid.Row="9" HorizontalAlignment="Left" Margin="10,1,0,0" Width="160" Height="27"/>
+        <ComboBox x:Name="cbComuneNascita"  Grid.Row="9" HorizontalAlignment="Left" Margin="170,0,0,0" Width="300" Height="27" VerticalAlignment="Center" 
                   IsEditable="True" IsTextSearchEnabled="True" TextSearch.TextPath="Descrizione" SelectionChanged="cbComuneNascita_SelectionChanged" Loaded="cb_Loaded" >
             <ComboBox.ItemTemplate>
                 <DataTemplate>
@@ -81,18 +84,43 @@
             </ComboBox.ItemTemplate>
         </ComboBox>
 
-        <Label x:Name="lblProvNascita" Content="Provincia Nascita:" Grid.Row="10" HorizontalAlignment="Left" Margin="10,1,0,0" Width="140" Height="27"/>
-        <TextBox x:Name="tbProvinciaNascita" Text="  " Margin="150,0,0,0" Grid.Row="10" HorizontalAlignment="Left" VerticalAlignment="Center" Width="30" IsReadOnly="True"/>
+        <Label x:Name="lblProvNascita" Content="Provincia Nascita:" Grid.Row="10" HorizontalAlignment="Left" Margin="10,1,0,0" Width="160" Height="27"/>
+        <TextBox x:Name="tbProvinciaNascita" Text="  " Margin="170,0,0,0" Grid.Row="10" HorizontalAlignment="Left" VerticalAlignment="Center" Width="30" IsReadOnly="True"/>
 
-        <Label x:Name="lblStatoCittadinanza" Content="Stato Cittadinanza:" Grid.Row="11" HorizontalAlignment="Left" Margin="10,1,0,0" Width="140" Height="27"/>
+        <Label x:Name="lblStatoCittadinanza" Content="Stato Cittadinanza:" Grid.Row="11" HorizontalAlignment="Left" Margin="10,1,0,0" Width="160" Height="27"/>
         <ComboBox x:Name="cbStatoCittadinanza" Grid.Row="11" HorizontalAlignment="Left" 
-                  IsEditable="True" IsTextSearchEnabled="True" TextSearch.TextPath="Descrizione" Margin="150,0,0,0" Width="300" Height="27" VerticalAlignment="Center" Loaded="cb_Loaded" >
+                  IsEditable="True" IsTextSearchEnabled="True" TextSearch.TextPath="Descrizione" Margin="170,0,0,0" Width="300" Height="27" VerticalAlignment="Center" Loaded="cb_Loaded" >
             <ComboBox.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding Descrizione}" Tag="{Binding Codice}" />
                 </DataTemplate>
             </ComboBox.ItemTemplate>
         </ComboBox>
+
+        <Label x:Name="lblTipoDocumento" Content="Tipo Documento:" Grid.Row="12" HorizontalAlignment="Left" Margin="10,1,0,0" Width="160" Height="27"/>
+        <ComboBox x:Name="cbTipoDocumento"  Grid.Row="12" HorizontalAlignment="Left" Margin="170,0,0,0" Width="300" Height="27" VerticalAlignment="Center" >
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Descrizione}" Tag="{Binding Codice}" />
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
+
+        <Label x:Name="lblNumDoc" Content="Numero documento:" Grid.Row="13" HorizontalAlignment="Left" Margin="10,1,0,0" Width="160" Height="27"/>
+        <TextBox x:Name="tbNumDoc" MaxLength="20" Margin="170,0,0,0" Grid.Row="13" HorizontalAlignment="Left" VerticalAlignment="Center" Width="300"/>
+
+        <Label x:Name="lblLuogoDoc" Content="Luogo Rilascio Documento:" Grid.Row="14" HorizontalAlignment="Left" Margin="10,1,0,0" Width="160" Height="27"/>
+        <ComboBox x:Name="cbLuogoDoc" Grid.Row="14" HorizontalAlignment="Left" 
+                  IsEditable="True" IsTextSearchEnabled="True" TextSearch.TextPath="Descrizione" Margin="170,0,0,0" Width="300" Height="27" VerticalAlignment="Center" Loaded="cb_Loaded" >
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Descrizione}" Tag="{Binding Codice}" />
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
+        
+        <Button x:Name="btnCancel" Content="Annulla" HorizontalAlignment="Right" Margin="0,0,100,0" Grid.Row="16" VerticalAlignment="Center" Width="75" Click="btnCancel_Click"/>
+        <Button x:Name="btnOk" Content="Salva" HorizontalAlignment="Right" Margin="0,0,10,0" Grid.Row="16" VerticalAlignment="Center" Width="75" Click="btnOk_Click"/>
 
     </Grid>
 </Window>

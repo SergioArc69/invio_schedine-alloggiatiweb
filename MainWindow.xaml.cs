@@ -288,7 +288,7 @@ namespace InvioSchedineAlloggiatiWeb
 
             for (int i = 0; i < lineCount; i++)
             {
-                string s = ""; // dgSchedine.dGetLineText(i).TrimEnd(new char[] { '\r', '\n' });
+                string s = ((RecordSchedina)dgSchedine.Items[i]).line.ToString(); // dgSchedine.GetLineText(i).TrimEnd(new char[] { '\r', '\n' });
                 ES.Add(s);
             }
             EsitoOperazioneServizio res = soapClientAW.Test(tbUsername.Text, tiToken.token, ES, ref ese);
@@ -321,15 +321,15 @@ namespace InvioSchedineAlloggiatiWeb
         {
             ElencoSchedineEsito ese = new ElencoSchedineEsito();
             ArrayOfString ES = new ArrayOfString();
-            /*
-            int lineCount = tbSchedine.LineCount;
+
+            int lineCount = dgSchedine.Items.Count;
 
             for (int i = 0; i < lineCount; i++)
             {
-                string s = tbSchedine.GetLineText(i).TrimEnd(new char[] { '\r', '\n' });
+                string s = ((RecordSchedina)dgSchedine.Items[i]).line.ToString(); // dgSchedine.GetLineText(i).TrimEnd(new char[] { '\r', '\n' });
                 ES.Add(s);
             }
-            */
+
             EsitoOperazioneServizio res = soapClientAW.Send(tbUsername.Text, tiToken.token, ES, ref ese);
             if (res.esito)
             {
@@ -424,9 +424,11 @@ namespace InvioSchedineAlloggiatiWeb
             RecordSchedina rs = (RecordSchedina)row.Item;
             Schedina schedina = new Schedina();
             schedina.cbTipoAlloggiato.ItemsSource = dtTipiAlloggiato.AsDataView();
-            schedina.cbComuneNascita.ItemsSource = dtLuoghi.AsDataView();
             schedina.cbStatoNascita.ItemsSource = dtStati.AsDataView();
+            schedina.cbComuneNascita.ItemsSource = dtComuni.AsDataView();            
             schedina.cbStatoCittadinanza.ItemsSource = dtStati.AsDataView();
+            schedina.cbTipoDocumento.ItemsSource = dtTipiDocumento.AsDataView();
+            schedina.cbLuogoDoc.ItemsSource = dtLuoghi.AsDataView();
             schedina.SetRecord(rs);
             schedina.ShowDialog();
         }

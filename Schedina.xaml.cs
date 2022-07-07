@@ -84,6 +84,33 @@ namespace InvioSchedineAlloggiatiWeb
 
             selRow = cbStatoCittadinanza.Items.OfType<DataRowView>().Single(r => (string)r["Codice"] == rs.Cittadinanza);
             cbStatoCittadinanza.SelectedItem = selRow;
+
+            if ("16;17;18".Contains(rs.TipoAlloggiato))
+            {
+                cbTipoDocumento.IsEnabled = true;
+                if (!String.IsNullOrEmpty(rs.TipoDoc.Trim()))
+                {
+                    selRow = cbTipoDocumento.Items.OfType<DataRowView>().Single(r => (string)r["Codice"] == rs.TipoDoc);
+                    cbTipoDocumento.SelectedItem = selRow;
+                }
+
+                tbNumDoc.IsEnabled = true;
+                tbNumDoc.Text = rs.NumeroDoc;
+
+                cbLuogoDoc.IsEnabled = true;
+                if (!String.IsNullOrEmpty(rs.LuogoRilascioDoc.Trim()))
+                {
+                    selRow = cbLuogoDoc.Items.OfType<DataRowView>().Single(r => (string)r["Codice"] == rs.LuogoRilascioDoc);
+                    cbLuogoDoc.SelectedItem = selRow;
+                }
+            }
+            else
+            {
+                cbTipoDocumento.IsEnabled = false;
+                tbNumDoc.IsEnabled = false;
+                cbLuogoDoc.IsEnabled = false;
+            }
+
         }
 
         private void cbComuneNascita_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -128,6 +155,11 @@ namespace InvioSchedineAlloggiatiWeb
             ComboBox cb = sender as ComboBox;
             (cb.Template.FindName("PART_EditableTextBox", cb) as TextBox).CharacterCasing = CharacterCasing.Upper;
         }
+
+        private void btnCancel_Click(object sender, RoutedEventArgs e) => DialogResult = false;
+
+        private void btnOk_Click(object sender, RoutedEventArgs e) => DialogResult = true;
+        
     }
 
     public class RadioButtonCheckedConverter : IValueConverter

@@ -35,6 +35,8 @@ namespace InvioSchedineAlloggiatiWeb
                   dtStati = null,
                   dtComuni = null,
                   dtTipiAlloggiato = null,
+                  dtTipiAlloggiatoPrincipale = null,
+                  dtTipiAlloggiatoAltro = null,
                   dtTipiDocumento = null;
 
         public MainWindow()
@@ -66,6 +68,9 @@ namespace InvioSchedineAlloggiatiWeb
                         dtTipiAlloggiato = Utils.LoadCSVintoDataTable(csv);
 
                         sEsito.AppendFormat("  Tabella 'Tipi_Alloggiato': {0} ({1} Righe)\n", dtTipiAlloggiato.Rows.Count > 0 ? "Ok" : "KO", dtTipiAlloggiato.Rows.Count);
+
+                        dtTipiAlloggiatoPrincipale = dtTipiAlloggiato.Select("Codice IN ('16','17','18')", "Descrizione").CopyToDataTable();
+                        dtTipiAlloggiatoAltro = dtTipiAlloggiato.Select("Codice NOT IN ('16','17','18')", "Descrizione").CopyToDataTable();
 
                         bEnableDownload = dtTipiAlloggiato.Rows.Count <= 0;
                     }
@@ -423,14 +428,27 @@ namespace InvioSchedineAlloggiatiWeb
             DataGridRow row = sender as DataGridRow;
             RecordSchedina rs = (RecordSchedina)row.Item;
             Schedina schedina = new Schedina();
-            schedina.cbTipoAlloggiato.ItemsSource = dtTipiAlloggiato.AsDataView();
+
+            if (dgSchedine.SelectedIndex == 0)
+            {
+                schedina.cbTipoAlloggiato.ItemsSource = dtTipiAlloggiatoPrincipale.AsDataView();
+            }
+            else
+            {
+                schedina.cbTipoAlloggiato.ItemsSource = dtTipiAlloggiatoAltro.AsDataView();
+            }
             schedina.cbStatoNascita.ItemsSource = dtStati.AsDataView();
             schedina.cbComuneNascita.ItemsSource = dtComuni.AsDataView();            
             schedina.cbStatoCittadinanza.ItemsSource = dtStati.AsDataView();
             schedina.cbTipoDocumento.ItemsSource = dtTipiDocumento.AsDataView();
             schedina.cbLuogoDoc.ItemsSource = dtLuoghi.AsDataView();
             schedina.SetRecord(rs);
-            schedina.ShowDialog();
+            
+            bool? rc = schedina.ShowDialog();
+            if (rc.HasValue && rc.Value)   // Dialog closed by "Save" button...
+            {
+                
+            }
         }
 
         private void btnCheckToken_Click(object sender, RoutedEventArgs e)
@@ -460,6 +478,9 @@ namespace InvioSchedineAlloggiatiWeb
 
                 dtTipiAlloggiato = Utils.LoadCSVintoDataTable(csv);
                 sEsito.AppendFormat("  Tabella 'Tipi_Alloggiato': Ok ({0} Righe)\n", dtTipiAlloggiato.Rows.Count);
+
+                dtTipiAlloggiatoPrincipale = dtTipiAlloggiato.Select("Codice IN ('16','17','18')", "Descrizione").CopyToDataTable();
+                dtTipiAlloggiatoAltro = dtTipiAlloggiato.Select("Codice NOT IN ('16','17','18')", "Descrizione").CopyToDataTable();
             }
             else
             {

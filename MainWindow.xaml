@@ -47,8 +47,9 @@
         </StackPanel>
         
         <Button x:Name="btnLoadSchedine" Content="Carica file Schedine" HorizontalAlignment="Left" Height="23" Margin="5,4,0,0" Grid.Row="2" VerticalAlignment="Top" Width="115" Click="btnLoadSchedine_Click"/>
-        <CheckBox x:Name="cbEnableEdit" Content="Abilita modifica" HorizontalAlignment="Right" VerticalAlignment="Top" Grid.Row="2" Margin="0,8,10,0" Checked="cbEnableEdit_Checked" Unchecked="cbEnableEdit_Unchecked" />
-        <DataGrid x:Name="dgSchedine" Margin="0,30,0,0" Grid.Row="2" FontFamily="Lucida Console" FontSize="10" IsReadOnly="False" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" AutoGenerateColumns="False" ItemsSource="{Binding}" >
+        <Button x:Name="btnAddSchedina"  Content="Aggiungi Schedina" HorizontalAlignment="Left" Height="23" Margin="125,4,0,0" Grid.Row="2" VerticalAlignment="Top" Width="115" Click="btnAddSchedina_Click"  IsEnabled="False"/>
+        <Button x:Name="btnSaveSchedine" Content="Salva file Schedine" HorizontalAlignment="Left" Height="23" Margin="245,4,0,0" Grid.Row="2" VerticalAlignment="Top" Width="120" Click="btnSaveSchedine_Click" IsEnabled="False"/>
+        <DataGrid x:Name="dgSchedine" Margin="0,30,0,0" Grid.Row="2" FontFamily="Lucida Console" FontSize="10" IsReadOnly="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" AutoGenerateColumns="False" ItemsSource="{Binding}" >
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Tipo Alloggiato" Binding="{Binding TipoAlloggiato}" />
                 <DataGridTextColumn Header="Data Arrivo" Binding="{Binding DataArrivo}"/>

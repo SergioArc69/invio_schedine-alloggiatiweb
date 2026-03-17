@@ -105,7 +105,7 @@ namespace InvioSchedineAlloggiatiWeb
 
                         sEsito.AppendFormat("  Tabella 'Luoghi':          {0} ({1} Righe)\n", dtLuoghi.Rows.Count > 0 ? "Ok" : "KO", dtLuoghi.Rows.Count);
 
-                        bEnableDownload = bEnableDownload || dtTipiDocumento.Rows.Count <= 0 || (File.GetLastWriteTime("./Dati/Luoghi.csv") < DateTime.Today.AddDays(-1));
+                        bEnableDownload = bEnableDownload || (dtTipiDocumento?.Rows.Count ?? 0) <= 0 || (File.GetLastWriteTime("./Dati/Luoghi.csv") < DateTime.Today.AddDays(-1));
                     }
                     else
                     {
@@ -128,6 +128,7 @@ namespace InvioSchedineAlloggiatiWeb
                 else
                 {
                     btnTabelle.Visibility = Visibility.Hidden;
+                    btnAddSchedina.IsEnabled = true;
                 }
             }
             else
@@ -269,19 +270,52 @@ namespace InvioSchedineAlloggiatiWeb
                 }
 
                 dgSchedine.ItemsSource = schedine;
-
-                dgSchedine.IsReadOnly = true;
+                lblNumSchedine.Content = string.Format("Tot. schedine: {0}", schedine.Count);
+                btnSaveSchedine.IsEnabled = schedine.Count > 0;
             }
         }
 
-        private void cbEnableEdit_Checked(object sender, RoutedEventArgs e)
+        private void btnSaveSchedine_Click(object sender, RoutedEventArgs e)
         {
-            dgSchedine.IsReadOnly = false;
-        }
+            if (schedine == null || schedine.Count == 0)
+            {
+                sbItem.Content = "Nessuna schedina da salvare.";
+                return;
+            }
 
-        private void cbEnableEdit_Unchecked(object sender, RoutedEventArgs e)
-        {
-            dgSchedine.IsReadOnly = true;
+            var dialog = new Microsoft.Win32.SaveFileDialog();
+            dialog.Title      = "Salva file Schedine";
+            dialog.DefaultExt = "txt";
+            dialog.Filter     = "File di testo (.txt)|*.txt|Tutti i file (*.*)|*.*";
+            dialog.FileName   = string.Format("Schedine_{0}.txt", DateTime.Today.ToString("yyyyMMdd"));
+            if (settingsDef.CartellaSchedine.Equals(".") || !System.IO.Directory.Exists(settingsDef.CartellaSchedine))
+                dialog.InitialDirectory = Environment.CurrentDirectory;
+            else
+                dialog.InitialDirectory = settingsDef.CartellaSchedine;
+
+            dialog.CheckPathExists  = true;
+            dialog.CheckFileExists  = false;
+            dialog.DereferenceLinks = true;
+
+            if (dialog.ShowDialog() != true) return;
+
+            string sPath = System.IO.Path.GetDirectoryName(dialog.FileName);
+            if (!sPath.Equals(settingsDef.CartellaSchedine))
+            {
+                settingsDef.CartellaSchedine = sPath;
+                settingsDef.Save();
+            }
+
+            try
+            {
+                string[] lines = schedine.Select(rs => rs.ToString()).ToArray();
+                File.WriteAllLines(dialog.FileName, lines, Encoding.Default);
+                sbItem.Content = string.Format("File schedine salvato: {0}", dialog.FileName);
+            }
+            catch (Exception ex)
+            {
+                sbItem.Content = string.Format("Errore salvataggio: {0}", ex.Message);
+            }
         }
 
         private void btnCheckSchedine_Click(object sender, RoutedEventArgs e)
@@ -425,29 +459,56 @@ namespace InvioSchedineAlloggiatiWeb
 
         private void dgSchedine_Row_DoubleClick(object sender, MouseButtonEventArgs e)
         {
+            // Il primo click della sequenza mette il DataGrid in edit mode:
+            // chiudiamo la transazione prima di aprire il dialog.
+            dgSchedine.CommitEdit(DataGridEditingUnit.Row, exitEditingMode: true);
+
+            if (dtTipiAlloggiato == null || dtStati == null || dtComuni == null || dtTipiDocumento == null)
+            {
+                MessageBox.Show("Scaricare prima le tabelle di riferimento.", "Tabelle non disponibili", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
             DataGridRow row = sender as DataGridRow;
             RecordSchedina rs = (RecordSchedina)row.Item;
             Schedina schedina = new Schedina();
 
-            if (dgSchedine.SelectedIndex == 0)
-            {
-                schedina.cbTipoAlloggiato.ItemsSource = dtTipiAlloggiatoPrincipale.AsDataView();
-            }
-            else
-            {
-                schedina.cbTipoAlloggiato.ItemsSource = dtTipiAlloggiatoAltro.AsDataView();
-            }
-            schedina.cbStatoNascita.ItemsSource = dtStati.AsDataView();
-            schedina.cbComuneNascita.ItemsSource = dtComuni.AsDataView();            
+            schedina.cbTipoAlloggiato.ItemsSource   = (dgSchedine.SelectedIndex == 0 ? dtTipiAlloggiatoPrincipale : dtTipiAlloggiatoAltro).AsDataView();
+            schedina.cbStatoNascita.ItemsSource     = dtStati.AsDataView();
+            schedina.cbComuneNascita.ItemsSource    = dtComuni.AsDataView();
             schedina.cbStatoCittadinanza.ItemsSource = dtStati.AsDataView();
-            schedina.cbTipoDocumento.ItemsSource = dtTipiDocumento.AsDataView();
-            schedina.cbLuogoDoc.ItemsSource = dtLuoghi.AsDataView();
+            schedina.cbTipoDocumento.ItemsSource    = dtTipiDocumento.AsDataView();
+            schedina.cbLuogoDoc.ItemsSource         = dtLuoghi.AsDataView();
             schedina.SetRecord(rs);
-            
+
             bool? rc = schedina.ShowDialog();
-            if (rc.HasValue && rc.Value)   // Dialog closed by "Save" button...
+            if (rc.HasValue && rc.Value)
             {
-                
+                dgSchedine.Items.Refresh();
+            }
+        }
+
+        private void btnAddSchedina_Click(object sender, RoutedEventArgs e)
+        {
+            bool isPrincipal = schedine.Count == 0;
+            RecordSchedina rs = new RecordSchedina();
+            Schedina schedina = new Schedina();
+
+            schedina.cbTipoAlloggiato.ItemsSource    = (isPrincipal ? dtTipiAlloggiatoPrincipale : dtTipiAlloggiatoAltro).AsDataView();
+            schedina.cbStatoNascita.ItemsSource      = dtStati.AsDataView();
+            schedina.cbComuneNascita.ItemsSource     = dtComuni.AsDataView();
+            schedina.cbStatoCittadinanza.ItemsSource = dtStati.AsDataView();
+            schedina.cbTipoDocumento.ItemsSource     = dtTipiDocumento.AsDataView();
+            schedina.cbLuogoDoc.ItemsSource          = dtLuoghi.AsDataView();
+            schedina.SetRecord(rs);
+
+            bool? rc = schedina.ShowDialog();
+            if (rc.HasValue && rc.Value)
+            {
+                schedine.Add(rs);
+                dgSchedine.ItemsSource = schedine;
+                lblNumSchedine.Content = string.Format("Tot. schedine: {0}", schedine.Count);
+                btnSaveSchedine.IsEnabled = true;
             }
         }
 
@@ -528,6 +589,7 @@ namespace InvioSchedineAlloggiatiWeb
             {
                 sbItem.Content = "Download Tabelle: Ok!";
                 btnTabelle.Visibility = Visibility.Hidden;
+                btnAddSchedina.IsEnabled = true;
             }
             else
                 sbItem.Content = "Download Tabelle: Failed !";

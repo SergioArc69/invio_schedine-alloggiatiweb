@@ -128,7 +128,7 @@ namespace InvioSchedineAlloggiatiWeb
                 else
                 {
                     btnTabelle.Visibility = Visibility.Hidden;
-                    btnAddSchedina.IsEnabled = true;
+                    AggiornaStatoBtnAddSchedina();
                 }
             }
             else
@@ -272,6 +272,8 @@ namespace InvioSchedineAlloggiatiWeb
                 dgSchedine.ItemsSource = schedine;
                 lblNumSchedine.Content = string.Format("Tot. schedine: {0}", schedine.Count);
                 btnSaveSchedine.IsEnabled = schedine.Count > 0;
+                btnCancellaSchedine.IsEnabled = schedine.Count > 0;
+                AggiornaStatoBtnAddSchedina();
             }
         }
 
@@ -473,7 +475,7 @@ namespace InvioSchedineAlloggiatiWeb
             RecordSchedina rs = (RecordSchedina)row.Item;
             Schedina schedina = new Schedina();
 
-            schedina.cbTipoAlloggiato.ItemsSource   = (dgSchedine.SelectedIndex == 0 ? dtTipiAlloggiatoPrincipale : dtTipiAlloggiatoAltro).AsDataView();
+            schedina.cbTipoAlloggiato.ItemsSource   = GetTipiAlloggiatoConsentiti(dgSchedine.SelectedIndex == 0).AsDataView();
             schedina.cbStatoNascita.ItemsSource     = dtStati.AsDataView();
             schedina.cbComuneNascita.ItemsSource    = dtComuni.AsDataView();
             schedina.cbStatoCittadinanza.ItemsSource = dtStati.AsDataView();
@@ -485,16 +487,52 @@ namespace InvioSchedineAlloggiatiWeb
             if (rc.HasValue && rc.Value)
             {
                 dgSchedine.Items.Refresh();
+                AggiornaStatoBtnAddSchedina();
             }
+        }
+
+        private void AggiornaStatoBtnAddSchedina()
+        {
+            if (dtTipiAlloggiato == null || dtStati == null || dtComuni == null || dtTipiDocumento == null)
+            {
+                btnAddSchedina.IsEnabled = false;
+                return;
+            }
+
+            // Con una schedina OSPITE SINGOLO non si possono aggiungere altre schedine
+            if (schedine.Count > 0 && schedine[0].TipoAlloggiato.Trim() == "16")
+            {
+                btnAddSchedina.IsEnabled = false;
+                return;
+            }
+
+            btnAddSchedina.IsEnabled = true;
+        }
+
+        private DataTable GetTipiAlloggiatoConsentiti(bool isPrincipal)
+        {
+            if (isPrincipal)
+                return dtTipiAlloggiatoPrincipale;
+
+            string tipoAlloggiato1 = schedine[0].TipoAlloggiato.Trim();
+            if (tipoAlloggiato1 == "17")       // CAPO FAMIGLIA → solo FAMILIARE
+                return dtTipiAlloggiato.Select("Codice = '19'", "Descrizione").CopyToDataTable();
+            else                               // CAPO GRUPPO → solo MEMBRO GRUPPO
+                return dtTipiAlloggiato.Select("Codice = '20'", "Descrizione").CopyToDataTable();
         }
 
         private void btnAddSchedina_Click(object sender, RoutedEventArgs e)
         {
             bool isPrincipal = schedine.Count == 0;
             RecordSchedina rs = new RecordSchedina();
+            if (!isPrincipal)
+            {
+                rs.DataArrivo       = schedine[0].DataArrivo;
+                rs.GiorniPermanenza = schedine[0].GiorniPermanenza;
+            }
             Schedina schedina = new Schedina();
 
-            schedina.cbTipoAlloggiato.ItemsSource    = (isPrincipal ? dtTipiAlloggiatoPrincipale : dtTipiAlloggiatoAltro).AsDataView();
+            schedina.cbTipoAlloggiato.ItemsSource    = GetTipiAlloggiatoConsentiti(isPrincipal).AsDataView();
             schedina.cbStatoNascita.ItemsSource      = dtStati.AsDataView();
             schedina.cbComuneNascita.ItemsSource     = dtComuni.AsDataView();
             schedina.cbStatoCittadinanza.ItemsSource = dtStati.AsDataView();
@@ -509,7 +547,55 @@ namespace InvioSchedineAlloggiatiWeb
                 dgSchedine.ItemsSource = schedine;
                 lblNumSchedine.Content = string.Format("Tot. schedine: {0}", schedine.Count);
                 btnSaveSchedine.IsEnabled = true;
+                btnCancellaSchedine.IsEnabled = true;
+                AggiornaStatoBtnAddSchedina();
             }
+        }
+
+        private void dgSchedine_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key != Key.Delete || dgSchedine.SelectedItem == null)
+                return;
+
+            RecordSchedina rs = (RecordSchedina)dgSchedine.SelectedItem;
+            string desc = $"{rs.Cognome.Trim()} {rs.Nome.Trim()}".Trim();
+            if (string.IsNullOrEmpty(desc)) desc = "(schedina selezionata)";
+
+            var risposta = MessageBox.Show(
+                $"Eliminare la schedina di {desc}?",
+                "Conferma eliminazione",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Question);
+
+            if (risposta != MessageBoxResult.Yes)
+                return;
+
+            schedine.Remove(rs);
+            lblNumSchedine.Content = string.Format("Tot. schedine: {0}", schedine.Count);
+            if (schedine.Count == 0)
+                btnSaveSchedine.IsEnabled = false;
+            AggiornaStatoBtnAddSchedina();
+            btnCancellaSchedine.IsEnabled = schedine.Count > 0;
+            e.Handled = true;
+        }
+
+        private void btnCancellaSchedine_Click(object sender, RoutedEventArgs e)
+        {
+            var risposta = MessageBox.Show(
+                "Cancellare tutte le schedine?",
+                "Conferma cancellazione",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Question);
+
+            if (risposta != MessageBoxResult.Yes)
+                return;
+
+            schedine.Clear();
+            dgSchedine.ItemsSource = schedine;
+            lblNumSchedine.Content = "Tot. schedine: 0";
+            btnSaveSchedine.IsEnabled = false;
+            btnCancellaSchedine.IsEnabled = false;
+            AggiornaStatoBtnAddSchedina();
         }
 
         private void btnCheckToken_Click(object sender, RoutedEventArgs e)
@@ -589,7 +675,7 @@ namespace InvioSchedineAlloggiatiWeb
             {
                 sbItem.Content = "Download Tabelle: Ok!";
                 btnTabelle.Visibility = Visibility.Hidden;
-                btnAddSchedina.IsEnabled = true;
+                AggiornaStatoBtnAddSchedina();
             }
             else
                 sbItem.Content = "Download Tabelle: Failed !";
